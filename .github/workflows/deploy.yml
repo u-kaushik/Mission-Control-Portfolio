@@ -1,0 +1,52 @@
+name: Deploy to Netlify
+
+on:
+  push:
+    branches: [ecom, agency, 'claude/**']
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect target site
+        id: site
+        run: |
+          BRANCH="${GITHUB_REF_NAME}"
+
+          # Direct branch match
+          if [ "$BRANCH" = "agency" ]; then
+            echo "site_id=${{ secrets.NETLIFY_SITE_ID_AGENCY }}" >> $GITHUB_OUTPUT
+            echo "target=agency" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          if [ "$BRANCH" = "ecom" ]; then
+            echo "site_id=${{ secrets.NETLIFY_SITE_ID_ECOM }}" >> $GITHUB_OUTPUT
+            echo "target=ecom" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # For claude/* branches, detect ancestry
+          # Check if branch is closer to agency or ecom
+          AGENCY_DIST=$(git rev-list --count origin/agency..HEAD 2>/dev/null || echo 9999)
+          ECOM_DIST=$(git rev-list --count origin/ecom..HEAD 2>/dev/null || echo 9999)
+
+          if [ "$AGENCY_DIST" -le "$ECOM_DIST" ]; then
+            echo "site_id=${{ secrets.NETLIFY_SITE_ID_AGENCY }}" >> $GITHUB_OUTPUT
+            echo "target=agency" >> $GITHUB_OUTPUT
+          else
+            echo "site_id=${{ secrets.NETLIFY_SITE_ID_ECOM }}" >> $GITHUB_OUTPUT
+            echo "target=ecom" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Deploy to Netlify
+        run: |
+          echo "Deploying to ${{ steps.site.outputs.target }} site..."
+          npm install -g netlify-cli
+          netlify deploy --dir=. --prod --auth=$NETLIFY_AUTH_TOKEN --site=${{ steps.site.outputs.site_id }}
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}

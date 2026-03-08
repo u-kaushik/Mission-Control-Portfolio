@@ -1,0 +1,2418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="theme-color" content="#ecedf3" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0c0f1e" media="(prefers-color-scheme: dark)">
+  <title>Mission Control — Agency</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300..700;1,14..32,300..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/thin/style.css">
+  <link rel="stylesheet" href="css/app.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <!-- ====== PROJECT TREE POPOUT (overlay, available from any page) ====== -->
+  <div class="project-popout-overlay" id="project-popout-overlay" onclick="closeProjectPopout()">
+    <div class="project-popout" id="project-popout" onclick="event.stopPropagation()">
+      <div class="project-popout-header">
+        <div>
+          <div class="project-popout-title">Projects · Goals · To-Dos</div>
+          <div class="project-popout-objective">Agency at £50k/m gross profit</div>
+        </div>
+        <button class="project-popout-close" onclick="closeProjectPopout()">✕</button>
+      </div>
+      <div class="project-popout-body" id="project-popout-body">
+        <div class="pp-empty"><span class="spinner-sm"></span> Loading…</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== APP SHELL ====== -->
+  <div class="app-shell">
+
+    <!-- ====== LEFT NAV (persistent, collapsible) ====== -->
+    <nav class="left-nav" id="left-nav">
+      <!-- Header: logo + collapse btn -->
+      <div class="nav-header">
+        <span class="nav-logo-icon">◇</span>
+        <span class="nav-logo-text">Mission Control</span>
+        <button class="nav-collapse-btn" id="nav-collapse-btn" title="Collapse sidebar">‹</button>
+      </div>
+      <!-- Expand button (shown only when collapsed) -->
+      <button class="nav-expand-btn" id="nav-expand-btn" title="Expand sidebar">›</button>
+      <!-- Main nav items -->
+      <div class="nav-items">
+        <div class="nav-category">Operate</div>
+        <button class="nav-item active" data-page="dashboard" data-label="Dashboard">
+          <i class="ph-thin ph-house nav-item-icon"></i>
+          <span class="nav-item-label">Dashboard</span>
+        </button>
+        <button class="nav-item" data-page="tasks" data-label="To-Dos">
+          <i class="ph-thin ph-check-square nav-item-icon"></i>
+          <span class="nav-item-label">To-Dos</span>
+          <span class="nav-item-badge" id="nav-badge-tasks">0</span>
+        </button>
+        <button class="nav-item" data-page="issues" data-label="Issues">
+          <i class="ph-thin ph-warning nav-item-icon"></i>
+          <span class="nav-item-label">Issues</span>
+          <span class="nav-item-badge" id="nav-badge-issues" style="display:none">0</span>
+        </button>
+        <button class="nav-item" data-page="insights" data-label="Insights">
+          <i class="ph-thin ph-chart-pie-slice nav-item-icon"></i>
+          <span class="nav-item-label">Insights</span>
+        </button>
+        <div class="nav-category">Grow</div>
+        <button class="nav-item" data-page="pipeline" data-label="Prospects">
+          <i class="ph-thin ph-user-focus nav-item-icon"></i>
+          <span class="nav-item-label">Prospects</span>
+        </button>
+        <button class="nav-item" data-page="campaigns" data-label="Campaigns">
+          <i class="ph-thin ph-paper-plane-tilt nav-item-icon"></i>
+          <span class="nav-item-label">Campaigns</span>
+        </button>
+        <button class="nav-item" data-page="content" data-label="Content">
+          <i class="ph-thin ph-film-strip nav-item-icon"></i>
+          <span class="nav-item-label">Content</span>
+        </button>
+        <button class="nav-item" data-page="clients" data-label="Clients">
+          <i class="ph-thin ph-users nav-item-icon"></i>
+          <span class="nav-item-label">Clients</span>
+        </button>
+        <div class="nav-category">Strategy</div>
+        <button class="nav-item" data-page="projects" data-label="Rocks">
+          <i class="ph-thin ph-mountains nav-item-icon"></i>
+          <span class="nav-item-label">Rocks</span>
+        </button>
+        <button class="nav-item" data-page="scorecard" data-label="Scorecard">
+          <i class="ph-thin ph-chart-bar nav-item-icon"></i>
+          <span class="nav-item-label">Scorecard</span>
+        </button>
+        <button class="nav-item" data-page="vto" data-label="V/TO">
+          <i class="ph-thin ph-compass nav-item-icon"></i>
+          <span class="nav-item-label">V/TO</span>
+        </button>
+        <div class="nav-category">Team</div>
+        <button class="nav-item" data-page="team" data-label="Team">
+          <i class="ph-thin ph-users-three nav-item-icon"></i>
+          <span class="nav-item-label">Team</span>
+        </button>
+        <button class="nav-item" data-page="l10" data-label="L10 Meeting">
+          <i class="ph-thin ph-handshake nav-item-icon"></i>
+          <span class="nav-item-label">L10 Meeting</span>
+        </button>
+        <button class="nav-item" data-page="calendar" data-label="Calendar">
+          <i class="ph-thin ph-calendar-blank nav-item-icon"></i>
+          <span class="nav-item-label">Calendar</span>
+        </button>
+      </div>
+      <!-- Bottom: settings -->
+      <div class="nav-bottom">
+        <button class="nav-item" data-page="settings" data-label="Settings" id="nav-settings-btn">
+          <i class="ph-thin ph-gear-six nav-item-icon"></i>
+          <span class="nav-item-label">Settings</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- ====== PAGE CONTENT AREA ====== -->
+    <div class="page-area" id="page-area">
+
+      <!-- Persistent header bar (shown on all pages) -->
+      <header class="header">
+        <!-- Left: logo -->
+        <div class="header-logo">
+          <span style="font-weight:800;font-size:14px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-primary)">Kaush Group</span>
+        </div>
+
+        <!-- Center: news ticker — category pill (click = jump menu) + rotating text (click = navigate) -->
+        <div class="header-center">
+          <div class="header-ticker">
+            <span class="header-ticker-label" id="header-ticker-label" onclick="tickerCategoryClick(event)">VISION</span>
+            <span class="header-ticker-sublabel" id="header-ticker-sublabel"><i class="ph-thin ph-lightbulb"></i> Purpose</span>
+            <span id="header-ticker-dots" style="display:flex;gap:3px;align-items:center;flex-shrink:0"></span>
+            <div class="header-ticker-window" id="header-ticker-window" onclick="tickerSlideClick()" style="cursor:pointer">
+              <!-- slides injected by JS -->
+            </div>
+            <span class="header-ticker-arrow" onclick="tickerSlideClick()" style="cursor:pointer">↗</span>
+          </div>
+        </div>
+
+        <!-- Right: subtle chips + online + clock -->
+        <div class="header-right">
+          <!-- Agents online chip -->
+          <div class="hdr-chip-wrap">
+            <div class="header-chip hdr-chip-btn" data-dropdown="dd-agents">
+              <span class="header-chip-num" id="hdr-agents">—</span>
+              <span class="header-chip-label">online</span>
+            </div>
+            <div class="hdr-dropdown" id="dd-agents"></div>
+          </div>
+          <!-- To-Dos chip -->
+          <div class="hdr-chip-wrap">
+            <div class="header-chip hdr-chip-btn" data-dropdown="dd-tasks">
+              <span class="header-chip-num" id="hdr-tasks">0</span>
+              <span class="header-chip-label" id="hdr-tasks-label">in progress</span>
+            </div>
+            <div class="hdr-dropdown" id="dd-tasks"></div>
+          </div>
+
+          <div class="header-sep"></div>
+
+          <!-- Weather chip -->
+          <div class="hdr-chip-wrap">
+            <div class="header-chip hdr-chip-btn" id="weather-chip" data-dropdown="dd-weather">
+              <span id="weather-emoji" style="font-size:12px"><i class="ph-thin ph-thermometer"></i></span>
+              <span class="header-chip-num" id="weather-temp">—°</span>
+            </div>
+            <div class="hdr-dropdown" id="dd-weather"></div>
+          </div>
+
+          <!-- Clock + date stacked, W chip right -->
+          <div class="header-clock-wrap">
+            <div class="header-clock-text">
+              <span class="header-clock" id="header-clock">--:--</span>
+              <span class="header-date" id="header-date">--- --</span>
+            </div>
+            <span class="header-week-chip" id="header-week-chip">W—</span>
+          </div>
+
+          <!-- Notifications bell — top right -->
+          <div class="notif-btn-wrap" id="notif-btn-wrap" style="position:relative;display:flex">
+            <button class="btn-icon" id="notif-btn" title="Notifications" aria-label="Open notifications"><i class="ph-thin ph-bell"></i></button>
+            <span id="header-notif-badge" class="notif-badge" style="display:none">0</span>
+            <div class="notif-dropdown" id="notif-dropdown">
+              <div class="notif-header">
+                <span class="notif-header-title">Notifications</span>
+                <button class="notif-mark-all" id="notif-mark-all">Mark all read</button>
+              </div>
+              <div class="notif-list" id="notif-list">
+                <div class="notif-empty">No notifications</div>
+              </div>
+            </div>
+          </div>
+          <!-- Settings button (hidden, triggered from nav) -->
+          <button class="btn-icon" id="settings-btn" title="Settings" aria-label="Open settings" style="display:none"><i class="ph-thin ph-gear-six"></i></button>
+        </div>
+      </header>
+
+      <!-- ══ PAGE: DASHBOARD ══ -->
+      <div class="page active" id="page-dashboard">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Dashboard</div>
+            <div class="page-subtitle">Weekly pulse — metrics, rocks, and team at a glance</div>
+          </div>
+          <div class="page-header-right" style="display:flex;align-items:center;gap:8px">
+            <span id="scorecard-week-label" style="font-size:12px;color:var(--text-secondary);font-weight:500">Loading…</span>
+          </div>
+        </div>
+        <div class="page-body dash-body" id="dash-body" style="overflow-y:auto">
+          <div class="dash-wrap">
+
+            <!-- ── Greeting banner ── -->
+            <div id="dash-greeting" style="font-size:18px;font-weight:700;color:var(--text-primary);letter-spacing:-0.01em;margin-bottom:14px;padding:2px 0"></div>
+
+            <!-- ── Test Mode status (compact) ── -->
+            <div id="dash-test-mode"></div>
+
+            <!-- ── Scorecard metrics table (full width) ── -->
+            <div class="dash-section-card" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:16px;box-shadow:var(--shadow-xs)">
+              <div style="padding:12px 14px;border-bottom:1px solid var(--border-light);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px">
+                <span class="scorecard-section-title" style="margin-bottom:0"><i class="ph-thin ph-list-bullets"></i> Weekly Measurables</span>
+              </div>
+              <div id="scorecard-metrics-body" style="min-height:80px;overflow-x:auto;-webkit-overflow-scrolling:touch">
+                <div class="loading-row"><span class="spinner-sm"></span></div>
+              </div>
+            </div>
+
+            <!-- ── Overview grid: Rocks(3) + Goals(5) + Todo(4) | Issues(7) + Team(5) ── -->
+            <div class="dash-grid" id="dash-grid">
+              <!-- Rocks strip (col-4) -->
+              <div class="dash-card dash-col-4" style="padding:0;overflow:hidden;border:none" id="dash-rocks-card">
+                <div style="padding:12px 14px;border-bottom:1px solid var(--border-light);display:flex;align-items:center;justify-content:space-between">
+                  <span class="dash-card-title" style="margin-bottom:0"><i class="ph-thin ph-mountains"></i> Rocks</span>
+                  <span onclick="event.stopPropagation();navigateTo('projects')" style="font-size:10px;font-weight:700;color:var(--text-muted);letter-spacing:0.06em;text-transform:uppercase;cursor:pointer">OPEN ↗</span>
+                </div>
+                <div id="scorecard-rocks-strip" style="padding:8px 12px;display:flex;flex-direction:column;gap:0;min-height:60px;max-height:420px;overflow-y:auto">
+                  <div class="loading-row"><span class="spinner-sm"></span></div>
+                </div>
+              </div>
+              <!-- Rendered cards fill remaining columns -->
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ PAGE: SCORECARD (full detail) ══ -->
+      <div class="page" id="page-scorecard">
+        <div class="page-header sc-page-header">
+          <div class="sc-header-title">
+            <div class="page-title">Scorecard</div>
+            <div class="page-subtitle">Weekly metrics — are we on track?</div>
+          </div>
+          <div class="page-header-right sc-header-controls" style="display:flex;align-items:center;gap:8px">
+            <!-- Quarter filter tabs -->
+            <div id="sc-q-tabs" class="sc-q-tabs-wrap" style="display:flex;gap:4px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:3px">
+              <button class="sc-q-tab active" data-q="current" onclick="setScorecardQ(this,'current')" style="padding:4px 10px;border:none;border-radius:4px;font-size:11px;font-weight:700;cursor:pointer;background:var(--surface);color:var(--text-primary);box-shadow:var(--shadow-xs);font-family:inherit">Current</button>
+              <button class="sc-q-tab" data-q="1" onclick="setScorecardQ(this,'1')" style="padding:4px 10px;border:none;border-radius:4px;font-size:11px;font-weight:700;cursor:pointer;background:none;color:var(--text-secondary);font-family:inherit">Q1</button>
+              <button class="sc-q-tab" data-q="2" onclick="setScorecardQ(this,'2')" style="padding:4px 10px;border:none;border-radius:4px;font-size:11px;font-weight:700;cursor:pointer;background:none;color:var(--text-secondary);font-family:inherit">Q2</button>
+            </div>
+          </div>
+        </div>
+        <!-- Sub-header: range label only -->
+        <div class="sc-subheader">
+          <span id="sc-full-range-label" style="font-size:11px;color:var(--text-muted);font-weight:500"></span>
+        </div>
+        <div class="page-body sc-page-body" style="overflow-y:auto">
+          <div class="sc-table-card" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow-x:auto;box-shadow:var(--shadow-xs);-webkit-overflow-scrolling:touch">
+            <div id="sc-full-table-body" style="min-height:120px;overflow-x:auto;-webkit-overflow-scrolling:touch">
+              <div class="loading-row"><span class="spinner-sm"></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ PAGE: PROJECTS / ROCKS ══ -->
+      <div class="page" id="page-projects">
+        <div class="page-header rocks-page-header">
+          <div class="rocks-header-title">
+            <div class="page-title">Rocks</div>
+            <div class="page-subtitle">90-day priorities</div>
+          </div>
+          <div class="page-header-right rocks-header-controls" style="display:flex;gap:8px;align-items:center">
+            <div id="rocks-q-tabs" style="display:flex;gap:4px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:3px">
+              <button class="rocks-q-tab" data-q="all" onclick="setRocksQ(this,'all')" style="padding:4px 10px;border:none;border-radius:4px;font-size:11px;font-weight:700;cursor:pointer;background:none;color:var(--text-secondary);font-family:inherit">All</button>
+              <button class="rocks-q-tab active" data-q="1" onclick="setRocksQ(this,'1')" style="padding:4px 10px;border:none;border-radius:4px;font-size:11px;font-weight:700;cursor:pointer;background:var(--surface);color:var(--text-primary);box-shadow:var(--shadow-xs);font-family:inherit">Q1</button>
+              <button class="rocks-q-tab" data-q="2" onclick="setRocksQ(this,'2')" style="padding:4px 10px;border:none;border-radius:4px;font-size:11px;font-weight:700;cursor:pointer;background:none;color:var(--text-secondary);font-family:inherit">Q2</button>
+            </div>
+          </div>
+        </div>
+        <div class="page-body rocks-page-body" style="overflow-y:auto">
+          <div class="rocks-inner-wrap" style="max-width:860px;margin:0 auto;width:100%">
+            <!-- Quarter summary banner -->
+            <div id="rocks-summary-bar" class="rocks-summary-bar"></div>
+            <!-- Rock cards -->
+            <div id="rocks-list" style="display:flex;flex-direction:column;gap:12px">
+              <div class="loading-row"><span class="spinner-sm"></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Rock expanded detail drawer -->
+      <div id="rock-drawer-overlay" style="display:none;position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.28);backdrop-filter:blur(2px)" onclick="if(event.target===this)closeRockDrawer()"></div>
+      <div id="rock-drawer" class="rock-drawer" style="display:none;position:fixed;top:0;right:0;bottom:0;width:480px;max-width:100vw;z-index:401;background:var(--surface);border-left:1px solid var(--border);box-shadow:var(--shadow-lg);overflow-y:auto;flex-direction:column"></div>
+
+      <!-- ══ PAGE: TASKS (agents + kanban + feed — mission control) ══ -->
+      <div class="page" id="page-tasks">
+        <div class="workspace">
+          <!-- LEFT: AGENTS PANEL -->
+          <div class="panel agents-panel">
+            <div class="panel-header">
+              <div class="panel-title">AGENTS</div>
+              <span class="count-badge" id="agents-count">9</span>
+            </div>
+            <div class="panel-body" id="agents-list">
+              <div class="loading-row"><span class="spinner-sm"></span></div>
+            </div>
+          </div>
+          <!-- CENTER: TO-DO QUEUE (EOS: 7-day action items) -->
+          <div class="panel queue-panel">
+            <div class="panel-header">
+              <div class="panel-title">TO-DO QUEUE</div>
+              <span class="count-badge" id="queue-count">0</span>
+              <span class="fire-badge" id="fire-badge"><i class="ph-thin ph-fire"></i> 0</span>
+              <span class="active-badge" id="active-badge">0 active</span>
+              <span id="week-countdown" style="margin-left:6px;font-size:10px;font-weight:600;color:var(--text-muted);white-space:nowrap"></span>
+              <button class="btn-header-toggle" onclick="toggleTodoSelectMode()" id="btn-todo-select" style="margin-left:auto"><i class="ph-thin ph-check-square"></i> Select</button>
+              <button class="btn-header" onclick="openNewTodoModal()">+ To-Do</button>
+            </div>
+            <!-- Mobile sub-header: count + add button — shown only on mobile -->
+            <div class="queue-mobile-bar">
+              <span style="font-size:12px;font-weight:600;color:var(--text-secondary)">To-Do Queue</span>
+              <span class="count-badge" id="queue-count-mobile" style="font-size:11px">0</span>
+              <button onclick="openNewTodoModal()" class="btn-header queue-mobile-add-btn">+ To-Do</button>
+            </div>
+            <div class="kanban-board" id="kanban-board"></div>
+            <!-- Selection floating bar -->
+            <div class="todo-select-bar" id="todo-select-bar">
+              <span class="sel-count" id="sel-count">0</span> <span>selected</span>
+              <button class="sel-all-btn" onclick="todoSelectAll()">Select All</button>
+              <button class="sel-delete-btn" id="sel-delete-btn" disabled onclick="todoDeleteSelected()"><i class="ph-thin ph-trash"></i> Delete</button>
+              <button class="sel-cancel-btn" onclick="toggleTodoSelectMode()">Cancel</button>
+            </div>
+            <!-- Delete confirmation dialog -->
+            <div class="delete-dialog-overlay" id="todo-delete-dialog">
+              <div class="delete-dialog">
+                <h3><i class="ph-thin ph-warning" style="color:var(--red)"></i> Delete to-dos?</h3>
+                <p id="todo-delete-msg">This will permanently delete <strong>0</strong> to-do(s) from Supabase. This cannot be undone.</p>
+                <div class="dialog-actions">
+                  <button class="btn-cancel" onclick="closeTodoDeleteDialog()">Cancel</button>
+                  <button class="btn-confirm-delete" id="btn-confirm-delete" onclick="confirmTodoDelete()"><i class="ph-thin ph-trash"></i> Delete</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- RIGHT: LIVE FEED -->
+          <div class="panel feed-panel">
+            <div class="panel-header">
+              <div class="panel-title">LIVE FEED</div>
+            </div>
+            <div class="feed-filters">
+              <div class="filter-pills" id="feed-filter-pills">
+                <span class="filter-pill active" data-filter="all">All</span>
+                <span class="filter-pill" data-filter="tasks"><i class="ph-thin ph-check-square"></i> To-Dos <span id="fp-tasks-count">0</span></span>
+                <span class="filter-pill" data-filter="rock"><i class="ph-thin ph-mountains"></i> Rocks <span id="fp-rock-count">0</span></span>
+                <span class="filter-pill" data-filter="issue"><i class="ph-thin ph-warning"></i> Issues <span id="fp-issue-count">0</span></span>
+                <span class="filter-pill" data-filter="scorecard"><i class="ph-thin ph-chart-bar"></i> Scorecard <span id="fp-scorecard-count">0</span></span>
+                <span class="filter-pill" data-filter="decisions">Decisions <span id="fp-decisions-count">0</span></span>
+                <span class="filter-pill" data-filter="comments">Comments <span id="fp-comments-count">0</span></span>
+                <span class="filter-pill" data-filter="docs">Docs <span id="fp-docs-count">0</span></span>
+                <span class="filter-pill" data-filter="status">Status <span id="fp-status-count">0</span></span>
+              </div>
+            </div>
+            <div class="agent-filters" id="agent-filter-pills">
+              <span class="agent-filter-pill active" data-agent="all">All Agents</span>
+            </div>
+            <div class="feed-body" id="feed-body">
+              <div class="loading-row"><span class="spinner-sm"></span></div>
+            </div>
+            <div class="feed-footer">
+              <div class="live-badge"><div class="live-dot"></div>LIVE</div>
+              <span style="font-size:var(--font-size-xxs);color:var(--text-muted);margin-left:auto;" id="feed-last-updated">--</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ PAGE: ISSUES (EOS Issues List — IDS workflow) ══ -->
+      <div class="page" id="page-issues">
+        <div class="page-header">
+          <div style="min-width:0;flex:1">
+            <div class="page-title">Issues</div>
+            <div class="page-subtitle issues-subtitle">Identify · Discuss · Solve — clear every blocker before it becomes a crisis</div>
+          </div>
+          <button class="btn-header" onclick="openAddIssueModal()" style="flex-shrink:0">+ Add Issue</button>
+        </div>
+        <div class="page-body issues-page-body" style="overflow-y:auto">
+          <div style="max-width:860px;width:100%;margin:0 auto">
+            <div id="issues-stats" class="rocks-stat-grid" style="margin-bottom:16px"></div>
+            <div class="issues-filters" id="issues-filter-row"></div>
+            <div id="issues-list" class="issues-list">
+              <div class="loading-row"><span class="spinner-sm"></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add Issue Modal -->
+      <div class="modal-overlay" id="add-issue-overlay" onclick="if(event.target===this)closeAddIssueModal()" style="display:none">
+        <div class="modal-box" style="max-width:480px">
+          <div class="modal-header">
+            <span class="modal-title"><i class="ph-thin ph-warning"></i> New Issue</span>
+            <button class="modal-close-btn" onclick="closeAddIssueModal()">✕</button>
+          </div>
+          <div class="modal-body" style="padding:20px;display:flex;flex-direction:column;gap:14px">
+            <div>
+              <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Issue Title *</label>
+              <input id="issue-title-input" type="text" placeholder="What's the blocker or obstacle?">
+            </div>
+            <div>
+              <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Description</label>
+              <textarea id="issue-desc-input" rows="3" placeholder="More context — what's the impact, what have you tried?"></textarea>
+            </div>
+            <div class="issue-modal-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <div>
+                <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Priority</label>
+                <select id="issue-priority-input">
+                  <option value="high"><span style="color:var(--red)">●</span> High</option>
+                  <option value="medium" selected><span style="color:var(--amber)">●</span> Medium</option>
+                  <option value="low"><span style="color:var(--green)">●</span> Low</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Assigned to</label>
+                <select id="issue-assigned-input">
+                  <option value="jarvis">Jarvis</option>
+                  <option value="quinn">Quinn</option>
+                  <option value="archie">Archie</option>
+                  <option value="kai">Kai</option>
+                  <option value="iris">Iris</option>
+                  <option value="dash">Dash</option>
+                  <option value="sola">Sola</option>
+                  <option value="luna">Luna</option>
+                  <option value="echo">Echo</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer" style="padding:14px 20px;display:flex;justify-content:flex-end;gap:8px;border-top:1px solid var(--border)">
+            <button onclick="closeAddIssueModal()" class="btn-secondary">Cancel</button>
+            <button class="btn-primary" onclick="submitIssue()">Add Issue</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ NEW TO-DO MODAL ══ -->
+      <div class="modal-overlay" id="new-todo-overlay" onclick="if(event.target===this)closeNewTodoModal()" style="display:none">
+        <div class="modal-box" style="max-width:520px">
+          <div class="modal-header">
+            <span class="modal-title"><i class="ph-thin ph-check-square"></i> New To-Do</span>
+            <button class="modal-close-btn" onclick="closeNewTodoModal()">✕</button>
+          </div>
+          <div class="modal-body" style="padding:20px;display:flex;flex-direction:column;gap:16px">
+
+            <!-- Title -->
+            <div>
+              <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">To-Do title *</label>
+              <input id="todo-title-input" type="text" placeholder="What needs to get done this week?">
+            </div>
+
+            <!-- Source picker -->
+            <div>
+              <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:8px;display:block">Source — where does this To-Do come from?</label>
+              <div class="source-picker">
+                <button class="source-btn" data-source="ids" onclick="setTodoSource('ids')"><i class="ph-thin ph-lightning"></i> IDS<br><span style="font-size:9px;font-weight:400;opacity:0.7">From an Issue</span></button>
+                <button class="source-btn" data-source="rock" onclick="setTodoSource('rock')"><i class="ph-thin ph-mountains"></i> Rock<br><span style="font-size:9px;font-weight:400;opacity:0.7">Milestone bite</span></button>
+                <button class="source-btn" data-source="admin" onclick="setTodoSource('admin')"><i class="ph-thin ph-gear-six"></i> Admin<br><span style="font-size:9px;font-weight:400;opacity:0.7">General ops</span></button>
+              </div>
+            </div>
+
+            <!-- Linked Issue (shown when source=ids) -->
+            <div class="todo-linked-row" id="todo-linked-issue-row">
+              <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Linked Issue</label>
+              <select id="todo-linked-issue-input">
+                <option value="">— No linked issue —</option>
+              </select>
+            </div>
+
+            <!-- Linked Rock/Goal (shown when source=rock) -->
+            <div class="todo-linked-row" id="todo-linked-rock-row">
+              <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Linked Rock / Goal</label>
+              <select id="todo-linked-rock-input">
+                <option value="">— No linked Rock —</option>
+              </select>
+            </div>
+
+            <!-- Due date + Assigned + Priority row -->
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+              <div>
+                <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Due date</label>
+                <input id="todo-due-input" type="date" class="select-sm">
+              </div>
+              <div>
+                <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Assign to</label>
+                <select id="todo-agent-input" class="select-sm">
+                  <option value="utkarsh">Utkarsh</option>
+                  <option value="jarvis">Jarvis</option>
+                  <option value="kai">Kai</option>
+                  <option value="quinn">Quinn</option>
+                  <option value="echo">Echo</option>
+                  <option value="luna">Luna</option>
+                  <option value="dash">Dash</option>
+                  <option value="sola">Sola</option>
+                  <option value="iris">Iris</option>
+                  <option value="archie">Archie</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Priority</label>
+                <select id="todo-priority-input" class="select-sm">
+                  <option value="5" selected>Standard</option>
+                  <option value="9">Urgent</option>
+                </select>
+              </div>
+            </div>
+
+          </div>
+          <div class="modal-footer" style="padding:14px 20px;display:flex;justify-content:flex-end;gap:8px;border-top:1px solid var(--border);align-items:center">
+            <span id="todo-submit-hint" style="font-size:11px;color:var(--text-muted);margin-right:auto"></span>
+            <button onclick="closeNewTodoModal()" class="btn-secondary">Cancel</button>
+            <button onclick="submitTodo()" class="btn-primary">Add To-Do</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ PAGE: CALENDAR ══ -->
+      <div class="page" id="page-calendar" style="flex-direction:column">
+        <div class="gc-header" id="gc-header"></div>
+        <div class="gc-layout">
+          <div class="gc-sidebar" id="gc-sidebar">
+            <div id="gc-mini-cal"></div>
+            <div id="gc-sources"></div>
+          </div>
+          <div class="gc-main" id="gc-main"></div>
+        </div>
+        <div class="gc-popover" id="gc-popover"></div>
+        <div class="gc-modal-overlay" id="gc-modal-overlay">
+          <div class="gc-modal" id="gc-modal"></div>
+        </div>
+      </div>
+
+      <!-- ══ PAGE: SUPPLIER PIPELINE ══ -->
+      <div class="page" id="page-pipeline">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Prospects</div>
+            <div class="page-subtitle" id="pipe-subtitle">Lead pipeline — prospect to client</div>
+          </div>
+          <div class="page-header-right" style="display:flex;gap:8px;align-items:center">
+            <div style="position:relative">
+              <input id="supplier-search" type="text" placeholder="Search prospects…" oninput="renderSuppliersView()" style="padding:6px 12px 6px 30px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:12px;background:var(--surface);color:var(--text-primary);font-family:inherit;outline:none;width:180px">
+              <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--text-muted);pointer-events:none"><i class="ph-thin ph-magnifying-glass"></i></span>
+            </div>
+            <button class="btn-header-toggle" id="supplier-view-toggle" onclick="toggleSupplierView()"><i class="ph-thin ph-squares-four"></i> Board</button>
+            <button class="btn-header-toggle" onclick="switchToListsView()"><i class="ph-thin ph-list-bullets"></i> Lists</button>
+            <button class="btn-header" onclick="openListModal()" id="new-list-btn" style="display:none">+ New List</button>
+            <button class="btn-header" onclick="openSupplierModal()">+ Add Prospect</button>
+          </div>
+        </div>
+        <div class="page-body" style="padding:20px 28px">
+          <div id="supplier-stats" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-bottom:20px"></div>
+          <div id="supplier-view-wrap"></div>
+
+          <!-- Floating action bar for selection -->
+          <div id="prospect-floating-bar" class="prospect-floating-bar" style="display:none">
+            <span id="prospect-selected-count" style="font-size:12px;font-weight:600;color:var(--text-primary)">0 selected</span>
+            <div style="display:flex;gap:6px;align-items:center;position:relative">
+              <button class="btn-primary" onclick="showBulkAddMenu()" style="font-size:11px;padding:5px 14px"><i class="ph-thin ph-plus"></i> Add to List</button>
+              <div id="bulk-add-list-menu" class="bulk-add-list-menu" style="display:none"></div>
+              <button class="btn-danger" id="bulk-remove-btn" onclick="bulkRemoveFromList()" style="font-size:11px;padding:5px 14px;display:none"><i class="ph-thin ph-minus"></i> Remove from List</button>
+              <button class="btn-secondary" onclick="_prospectSelectedIds.clear();_updateCheckboxUI();_updateFloatingBar()" style="font-size:11px;padding:5px 12px">Clear</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ PROSPECT LIST MODAL ══ -->
+      <div class="modal-overlay" id="prospect-list-modal-overlay" onclick="if(event.target===this)closeListModal()" style="display:none">
+        <div class="modal-box" style="max-width:440px">
+          <div class="modal-header">
+            <span class="modal-title" id="prospect-list-modal-title"><i class="ph-thin ph-list-bullets"></i> New List</span>
+            <button class="modal-close-btn" onclick="closeListModal()">&#x2715;</button>
+          </div>
+          <div class="modal-body" style="padding:20px;display:flex;flex-direction:column;gap:14px">
+            <input type="hidden" id="prospect-list-edit-id" value="">
+            <div>
+              <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">List Name *</label>
+              <input id="prospect-list-name" type="text" placeholder="SaaS CTOs UK 500+">
+            </div>
+            <div>
+              <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Description</label>
+              <textarea id="prospect-list-desc" rows="2" placeholder="What this list is for…"></textarea>
+            </div>
+          </div>
+          <div class="modal-footer" style="padding:14px 20px;display:flex;justify-content:flex-end;gap:8px;border-top:1px solid var(--border)">
+            <button onclick="closeListModal()" class="btn-secondary">Cancel</button>
+            <button id="prospect-list-save-btn" onclick="saveProspectList()" class="btn-primary">Create List</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ PROSPECT ADD/EDIT MODAL ══ -->
+      <div class="modal-overlay" id="supplier-modal-overlay" onclick="if(event.target===this)closeSupplierModal()" style="display:none">
+        <div class="modal-box" style="max-width:680px">
+          <div class="modal-header">
+            <span class="modal-title" id="supplier-modal-title"><i class="ph-thin ph-user-focus"></i> New Contact</span>
+            <span id="supplier-created-date" style="display:none;font-size:10px;color:var(--text-muted);font-weight:500;white-space:nowrap"></span>
+            <button class="modal-close-btn" onclick="closeSupplierModal()">&#x2715;</button>
+          </div>
+          <!-- Tab bar -->
+          <div id="supplier-tabs" style="display:flex;border-bottom:1px solid var(--border);background:var(--surface-2);padding:0 20px;gap:0">
+            <button class="supplier-tab active" data-tab="details" onclick="_switchSupplierTab('details')">Details</button>
+            <button class="supplier-tab" data-tab="socials" onclick="_switchSupplierTab('socials')">Socials</button>
+            <button class="supplier-tab" data-tab="log" onclick="_switchSupplierTab('log')">Contact Log</button>
+          </div>
+          <div class="modal-body" style="padding:0;min-height:340px">
+            <input type="hidden" id="supplier-edit-id" value="">
+
+            <!-- ── TAB: Details ── -->
+            <div id="supplier-tab-details" class="supplier-tab-pane" style="padding:20px;display:flex;flex-direction:column;gap:14px">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                <div>
+                  <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Company Name *</label>
+                  <input id="supplier-name" type="text" placeholder="Acme Corp…">
+                </div>
+                <div>
+                  <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Industry</label>
+                  <input id="supplier-category" type="text" placeholder="SaaS, E-commerce, Agency…">
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                <div>
+                  <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Contact Name</label>
+                  <input id="supplier-contact" type="text" placeholder="Decision-maker name">
+                </div>
+                <div>
+                  <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Title</label>
+                  <input id="supplier-title" type="text" placeholder="CTO, VP Engineering…">
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                <div>
+                  <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Phone</label>
+                  <input id="supplier-phone" type="tel" placeholder="+44 7700 900000">
+                </div>
+                <div>
+                  <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Email</label>
+                  <input id="supplier-email" type="email" placeholder="contact@company.com">
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                <div>
+                  <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Website</label>
+                  <input id="supplier-website" type="text" placeholder="https://…">
+                </div>
+                <div>
+                  <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Location</label>
+                  <input id="supplier-location" type="text" placeholder="London, UK">
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+                <div>
+                  <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Company Size</label>
+                  <select id="supplier-moq">
+                    <option value="">—</option>
+                    <option value="1-10">1-10</option><option value="11-50">11-50</option><option value="51-200">51-200</option>
+                    <option value="201-1000">201-1000</option><option value="1000+">1000+</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Source</label>
+                  <select id="supplier-source">
+                    <option value="">—</option>
+                    <option value="Google Maps">Google Maps</option><option value="LinkedIn">LinkedIn</option><option value="Referral">Referral</option>
+                    <option value="Inbound">Inbound</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Status</label>
+                  <select id="supplier-status">
+                    <option value="New">New</option><option value="Research">Research</option><option value="Contact Enriched">Contact Enriched</option><option value="1st Line Enriched">1st Line Enriched</option>
+                    <option value="Contacted">Contacted</option><option value="Qualified">Qualified</option><option value="Proposal">Proposal</option><option value="Won">Won</option><option value="Active Client">Active Client</option><option value="Lost">Lost</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Notes</label>
+                <textarea id="supplier-notes" rows="2" placeholder="Notes…"></textarea>
+              </div>
+            </div>
+
+            <!-- ── TAB: Socials ── -->
+            <div id="supplier-tab-socials" class="supplier-tab-pane" style="padding:20px;display:none;flex-direction:column;gap:14px">
+              <div style="display:flex;align-items:center;gap:10px">
+                <div style="width:32px;text-align:center;color:#0A66C2;font-size:18px"><i class="ph-thin ph-linkedin-logo"></i></div>
+                <div style="flex:1">
+                  <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">LinkedIn</label>
+                  <input id="supplier-linkedin" type="text" placeholder="https://linkedin.com/in/…">
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px">
+                <div style="width:32px;text-align:center;color:#E4405F;font-size:18px"><i class="ph-thin ph-instagram-logo"></i></div>
+                <div style="flex:1">
+                  <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Instagram</label>
+                  <input id="supplier-instagram" type="text" placeholder="https://instagram.com/… or @handle">
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px">
+                <div style="width:32px;text-align:center;color:#1877F2;font-size:18px"><i class="ph-thin ph-facebook-logo"></i></div>
+                <div style="flex:1">
+                  <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Facebook</label>
+                  <input id="supplier-facebook" type="text" placeholder="https://facebook.com/…">
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px">
+                <div style="width:32px;text-align:center;color:#FF0000;font-size:18px"><i class="ph-thin ph-youtube-logo"></i></div>
+                <div style="flex:1">
+                  <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">YouTube</label>
+                  <input id="supplier-youtube" type="text" placeholder="https://youtube.com/@…">
+                </div>
+              </div>
+            </div>
+
+            <!-- ── TAB: Contact Log ── -->
+            <div id="supplier-tab-log" class="supplier-tab-pane" style="padding:0;display:none;flex-direction:column">
+              <div id="supplier-log-entries" style="display:flex;flex-direction:column;gap:0;flex:1;overflow-y:auto;max-height:280px">
+                <div style="padding:24px;text-align:center;color:var(--text-muted);font-size:12px">No interactions logged yet</div>
+              </div>
+              <div style="padding:14px 20px;border-top:1px solid var(--border);background:var(--surface-2)">
+                <div style="display:flex;gap:8px;align-items:flex-end">
+                  <select id="supplier-log-type" style="width:100px;flex-shrink:0">
+                    <option value="Email">Email</option><option value="Call">Call</option><option value="LinkedIn">LinkedIn</option><option value="Meeting">Meeting</option><option value="Note">Note</option>
+                  </select>
+                  <input id="supplier-log-date" type="date" style="width:130px;flex-shrink:0">
+                  <input id="supplier-log-text" type="text" placeholder="What happened…" style="flex:1">
+                  <button class="btn-primary" onclick="_addContactLogEntry()" style="padding:7px 14px;white-space:nowrap;flex-shrink:0">+ Add</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer" style="padding:14px 20px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border)">
+            <button class="btn-danger" id="supplier-delete-btn" onclick="deleteSupplier()" style="display:none">Delete</button>
+            <div style="display:flex;gap:8px;margin-left:auto">
+              <button onclick="closeSupplierModal()" class="btn-secondary">Cancel</button>
+              <button id="supplier-save-btn" onclick="saveSupplier()" class="btn-primary">Add Prospect</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ PAGE: INSIGHTS ══ -->
+      <div class="page" id="page-insights">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Insights</div>
+            <div class="page-subtitle">Task analytics and work distribution</div>
+          </div>
+          <div class="page-header-right" style="display:flex;gap:8px;align-items:center">
+            <select id="insights-time-filter" class="select-sm" onchange="renderInsightsPage()">
+              <option value="all">All Time</option>
+              <option value="today">Today</option>
+              <option value="week" selected>This Week</option>
+              <option value="month">This Month</option>
+            </select>
+            <select id="insights-status-filter" class="select-sm" onchange="renderInsightsPage()">
+              <option value="all">All Statuses</option>
+              <option value="active">Active Only</option>
+              <option value="done">Done Only</option>
+            </select>
+          </div>
+        </div>
+        <div class="page-body" style="padding:20px 28px;overflow-y:auto">
+          <div id="ins-summary-cards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-bottom:20px"></div>
+          <div id="ins-completed-list" style="margin-bottom:20px"></div>
+          <div id="ins-chart-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow-xs)">
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:10px"><i class="ph-thin ph-tag"></i> Work Type Distribution</div>
+              <div style="position:relative;height:260px"><canvas id="ins-chart-tags"></canvas></div>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow-xs)">
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:10px"><i class="ph-thin ph-mountains"></i> Rock vs Ad Hoc</div>
+              <div style="position:relative;height:260px"><canvas id="ins-chart-rock"></canvas></div>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow-xs)">
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:10px"><i class="ph-thin ph-fire"></i> Priority Distribution</div>
+              <div style="position:relative;height:260px"><canvas id="ins-chart-priority"></canvas></div>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow-xs)">
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:10px"><i class="ph-thin ph-kanban"></i> Status Overview</div>
+              <div style="position:relative;height:260px"><canvas id="ins-chart-status"></canvas></div>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow-xs)">
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:10px"><i class="ph-thin ph-calendar-blank"></i> Due Date Timeline</div>
+              <div style="position:relative;height:260px"><canvas id="ins-chart-due"></canvas></div>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow-xs)">
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:10px"><i class="ph-thin ph-users-three"></i> Agent Workload</div>
+              <div style="position:relative;height:260px"><canvas id="ins-chart-agents"></canvas></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ PAGE: CAMPAIGNS ══ -->
+      <div class="page" id="page-campaigns">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Campaigns</div>
+            <div class="page-subtitle">Email outreach campaigns — sequences, stats & pipeline</div>
+          </div>
+          <div class="page-header-right" style="display:flex;gap:8px;align-items:center">
+            <div style="position:relative">
+              <input id="adcamp-search" type="text" placeholder="Search campaigns…" style="padding:6px 12px 6px 30px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:12px;background:var(--surface);color:var(--text-primary);font-family:inherit;outline:none;width:180px">
+              <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--text-muted);pointer-events:none"><i class="ph-thin ph-magnifying-glass"></i></span>
+            </div>
+            <button class="btn-header" onclick="openAdCampModal()">+ New Campaign</button>
+          </div>
+        </div>
+        <div class="page-body" style="padding:20px 28px">
+          <div id="validation-gates-banner"></div>
+          <div id="adcamp-stats" class="rocks-stat-grid" style="grid-template-columns:repeat(6,1fr);margin-bottom:20px"></div>
+          <div id="adcamp-filters" style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;align-items:center"></div>
+          <div id="adcamp-table-wrap"></div>
+        </div>
+      </div>
+
+
+      <!-- ══ PAGE: V/TO (Vision/Traction Organizer) ══ -->
+      <div class="page" id="page-vto">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Vision / Traction Organizer</div>
+            <div class="page-subtitle">The EOS V/TO — your company's strategy on one page</div>
+          </div>
+          <div class="page-header-right vto-header-right" style="display:flex;align-items:center;gap:10px">
+            <div id="vto-tabs" class="vto-tabs-wrap">
+              <button class="vto-q-tab active" data-v="vision" onclick="setVtoTab(this,'vision')"><i class="ph-thin ph-lightbulb"></i> Vision</button>
+              <button class="vto-q-tab" data-v="traction" onclick="setVtoTab(this,'traction')"><i class="ph-thin ph-gear-six"></i> Traction</button>
+            </div>
+            <button class="btn-header vto-save-btn" onclick="saveVTO()">Save V/TO</button>
+          </div>
+        </div>
+        <div class="page-body" style="padding:24px 28px;overflow-y:auto">
+          <div style="max-width:1000px;margin:0 auto;width:100%">
+
+            <div id="vto-panel-vision" class="vto-tab-panel">
+              <div class="vto-dash-grid" id="vto-grid">
+
+                <!-- ── Core Identity ── -->
+                <div class="vto-section-divider"><i class="ph-thin ph-diamond"></i> Core Identity</div>
+
+                <div class="vto-card vto-col-8" style="grid-row:span 2">
+                  <span class="vto-badge"><i class="ph-thin ph-heart"></i> Core Values</span>
+                  <div id="vto-core-values" style="display:flex;flex-direction:column;gap:6px"></div>
+                </div>
+
+                <div class="vto-card vto-col-4">
+                  <span class="vto-badge"><i class="ph-thin ph-crosshair"></i> Purpose</span>
+                  <div id="vto-purpose-boxes" style="display:flex;flex-direction:column;gap:8px"></div>
+                  <div class="vto-editable" id="vto-purpose" contenteditable="true" data-field="vto_purpose"
+                       placeholder="Why does your business exist?" style="display:none">Loading…</div>
+                </div>
+
+                <div class="vto-card vto-col-4">
+                  <span class="vto-badge"><i class="ph-thin ph-path"></i> Our Lane</span>
+                  <div id="vto-niche-boxes" style="display:flex;flex-direction:column;gap:8px"></div>
+                  <div class="vto-editable" id="vto-niche" contenteditable="true" data-field="vto_niche"
+                       placeholder="What we do better than anyone else" style="display:none">Loading…</div>
+                </div>
+
+                <div class="vto-card vto-card-hero vto-col-12">
+                  <span class="vto-badge"><i class="ph-thin ph-rocket-launch"></i> 10-Year Target</span>
+                  <div id="vto-10yr-boxes" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px"></div>
+                  <div class="vto-editable" id="vto-10yr" contenteditable="true" data-field="vto_10yr"
+                       placeholder="Your Big Hairy Audacious Goal" style="display:none">Loading…</div>
+                </div>
+
+                <!-- ── Marketing Strategy ── -->
+                <div class="vto-section-divider"><i class="ph-thin ph-megaphone"></i> Marketing Strategy</div>
+
+                <div class="vto-card vto-col-4">
+                  <span class="vto-badge"><i class="ph-thin ph-users-three"></i> Target Market</span>
+                  <div id="vto-target-avatars" style="display:flex;flex-direction:column;gap:8px"></div>
+                  <!-- Hidden: editable text for data persistence -->
+                  <div class="vto-editable" id="vto-target-market" contenteditable="true" data-field="vto_target_market"
+                       placeholder="Who is your ideal customer?" style="display:none">Loading…</div>
+                </div>
+
+                <div class="vto-card vto-col-8">
+                  <span class="vto-badge"><i class="ph-thin ph-fingerprint"></i> 3 Uniques</span>
+                  <div id="vto-uniques-rendered" style="display:flex;flex-direction:column;gap:6px"></div>
+                  <div class="vto-editable" id="vto-uniques" contenteditable="true" data-field="vto_uniques"
+                       placeholder="What makes you different?" style="display:none">Loading…</div>
+                </div>
+
+                <div class="vto-card vto-col-12">
+                  <span class="vto-badge"><i class="ph-thin ph-flow-arrow"></i> Proven Process</span>
+                  <div id="vto-process-flow" style="display:flex;align-items:center;gap:0;flex-wrap:wrap;margin-top:2px"></div>
+                  <div class="vto-editable" id="vto-process" contenteditable="true" data-field="vto_process"
+                       placeholder="Your step-by-step delivery process" style="display:none">Loading…</div>
+                </div>
+
+                <div class="vto-card vto-col-6">
+                  <span class="vto-badge"><i class="ph-thin ph-shield-check"></i> Internal Guarantee</span>
+                  <div class="vto-editable" id="vto-guarantee-internal" contenteditable="true" data-field="vto_guarantee_internal"
+                       placeholder="What do you guarantee internally?">Loading…</div>
+                </div>
+
+                <div class="vto-card vto-col-6">
+                  <span class="vto-badge"><i class="ph-thin ph-hand-heart"></i> Customer Guarantee</span>
+                  <div class="vto-editable" id="vto-guarantee-customer" contenteditable="true" data-field="vto_guarantee_customer"
+                       placeholder="What do you guarantee to your customers?">Loading…</div>
+                </div>
+
+                <!-- Hidden: legacy single guarantee field for backward compat -->
+                <div id="vto-guarantee" data-field="vto_guarantee" style="display:none"></div>
+
+                <!-- ── 3-Year Picture ── -->
+                <div class="vto-section-divider"><i class="ph-thin ph-binoculars"></i> 3-Year Picture</div>
+
+                <div class="vto-card vto-col-4">
+                  <span class="vto-badge"><i class="ph-thin ph-calendar-blank"></i> Future Date</span>
+                  <div class="vto-editable vto-kpi-value" id="vto-3yr-date" contenteditable="true" data-field="vto_3yr_date"
+                       style="color:var(--text-primary)" placeholder="e.g. Dec 2027">Loading…</div>
+                </div>
+
+                <div class="vto-card vto-col-4">
+                  <span class="vto-badge"><i class="ph-thin ph-currency-gbp"></i> Revenue Target</span>
+                  <div class="vto-editable vto-kpi-value" id="vto-3yr-revenue" contenteditable="true" data-field="vto_3yr_revenue"
+                       style="color:var(--green)" placeholder="£ —">Loading…</div>
+                </div>
+
+                <div class="vto-card vto-col-4">
+                  <span class="vto-badge"><i class="ph-thin ph-chart-line-up"></i> Profit Target</span>
+                  <div class="vto-editable vto-kpi-value" id="vto-3yr-profit" contenteditable="true" data-field="vto_3yr_profit"
+                       style="color:var(--primary)" placeholder="£ —">Loading…</div>
+                </div>
+
+                <!-- Hidden fields for backward compat — data saved/loaded but not displayed -->
+                <div id="vto-3yr-measurables" data-field="vto_3yr_measurables" style="display:none"></div>
+                <div id="vto-3yr-picture" data-field="vto_3yr_picture" style="display:none"></div>
+
+                <div class="vto-card vto-card-accent vto-card-accent-green vto-col-3">
+                  <span class="vto-badge"><i class="ph-thin ph-currency-gbp"></i> Revenue</span>
+                  <div class="vto-measure-row">£100k/month agency revenue</div>
+                  <div class="vto-measure-row">75%+ gross margins (AI-leveraged)</div>
+                  <div class="vto-measure-row">Owner's draw £20k+/month</div>
+                </div>
+
+                <div class="vto-card vto-card-accent vto-card-accent-blue vto-col-3">
+                  <span class="vto-badge"><i class="ph-thin ph-users-three"></i> Team &amp; Ops</span>
+                  <div class="vto-measure-row">3–5 specialist engineers hired</div>
+                  <div class="vto-measure-row">AI agent squad handling 80%+ of delivery</div>
+                  <div class="vto-measure-row">Templates cut delivery to days per client</div>
+                  <div class="vto-measure-row">SOPs &amp; playbooks for every engagement</div>
+                </div>
+
+                <div class="vto-card vto-card-accent vto-card-accent-purple vto-col-3">
+                  <span class="vto-badge"><i class="ph-thin ph-robot"></i> Service &amp; Delivery</span>
+                  <div class="vto-measure-row">20+ reusable agent templates</div>
+                  <div class="vto-measure-row">Average deal value £5k+/month</div>
+                  <div class="vto-measure-row">Client churn &lt; 3%/month</div>
+                  <div class="vto-measure-row">NPS score ≥ 60</div>
+                </div>
+
+                <div class="vto-card vto-card-accent vto-card-accent-orange vto-col-3">
+                  <span class="vto-badge"><i class="ph-thin ph-megaphone"></i> Pipeline &amp; Brand</span>
+                  <div class="vto-measure-row">50+ active retainer clients</div>
+                  <div class="vto-measure-row">Inbound covers 80%+ of new business</div>
+                  <div class="vto-measure-row">UK's leading AI automation agency</div>
+                  <div class="vto-measure-row">Operating from Spain with a laptop</div>
+                </div>
+
+              </div><!-- /vto-dash-grid -->
+            </div><!-- /vto-panel-vision -->
+
+            <div id="vto-panel-traction" class="vto-tab-panel" style="display:none">
+            <div class="vto-traction-grid">
+
+              <!-- 1-Year Plan -->
+              <div class="vto-card vto-traction-full">
+                <div class="vto-card-label"><i class="ph-thin ph-flag"></i> 1-Year Plan</div>
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px">
+                  <div>
+                    <div class="vto-card-title" style="font-size:11px;margin-bottom:3px"><i class="ph-thin ph-calendar-blank"></i> Future Date</div>
+                    <div class="vto-editable" id="vto-1yr-date" contenteditable="true" data-field="vto_1yr_date" placeholder="e.g. Dec 2026" style="font-size:12px">Loading…</div>
+                  </div>
+                  <div>
+                    <div class="vto-card-title" style="font-size:11px;margin-bottom:3px"><i class="ph-thin ph-currency-gbp"></i> Revenue</div>
+                    <div class="vto-editable" id="vto-1yr-revenue" contenteditable="true" data-field="vto_1yr_revenue" placeholder="£ —" style="font-size:12px">Loading…</div>
+                  </div>
+                  <div>
+                    <div class="vto-card-title" style="font-size:11px;margin-bottom:3px"><i class="ph-thin ph-chart-line-up"></i> Profit</div>
+                    <div class="vto-editable" id="vto-1yr-profit" contenteditable="true" data-field="vto_1yr_profit" placeholder="£ —" style="font-size:12px">Loading…</div>
+                  </div>
+                  <div>
+                    <div class="vto-card-title" style="font-size:11px;margin-bottom:3px"><i class="ph-thin ph-target"></i> Measurables</div>
+                    <div class="vto-editable" id="vto-1yr-measurables" contenteditable="true" data-field="vto_1yr_measurables" placeholder="Key metrics" style="font-size:12px">Loading…</div>
+                  </div>
+                </div>
+                <div class="vto-card-title" style="font-size:11px;margin-bottom:6px"><i class="ph-thin ph-target"></i> Goals for the Year</div>
+                <div id="vto-annual-goals" style="display:flex;flex-direction:column;gap:0;flex:1;overflow-y:auto;overflow-x:hidden;min-height:0">
+                  <div class="loading-row"><span class="spinner-sm"></span></div>
+                </div>
+              </div>
+
+              <!-- Quarterly Rocks -->
+              <div class="vto-card">
+                <div class="vto-card-label"><i class="ph-thin ph-mountains"></i> Rocks — <span id="vto-quarter-label">Q1 2026</span></div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+                  <div>
+                    <div class="vto-card-title" style="font-size:11px;margin-bottom:3px"><i class="ph-thin ph-calendar-blank"></i> Future Date</div>
+                    <div class="vto-editable" id="vto-q-date" contenteditable="true" data-field="vto_q_date" placeholder="End of quarter" style="font-size:12px">Loading…</div>
+                  </div>
+                  <div>
+                    <div class="vto-card-title" style="font-size:11px;margin-bottom:3px"><i class="ph-thin ph-currency-gbp"></i> Revenue</div>
+                    <div class="vto-editable" id="vto-q-revenue" contenteditable="true" data-field="vto_q_revenue" placeholder="£ —" style="font-size:12px">Loading…</div>
+                  </div>
+                  <div>
+                    <div class="vto-card-title" style="font-size:11px;margin-bottom:3px"><i class="ph-thin ph-chart-line-up"></i> Profit</div>
+                    <div class="vto-editable" id="vto-q-profit" contenteditable="true" data-field="vto_q_profit" placeholder="£ —" style="font-size:12px">Loading…</div>
+                  </div>
+                  <div>
+                    <div class="vto-card-title" style="font-size:11px;margin-bottom:3px"><i class="ph-thin ph-target"></i> Measurables</div>
+                    <div class="vto-editable" id="vto-q-measurables" contenteditable="true" data-field="vto_q_measurables" placeholder="Key metrics" style="font-size:12px">Loading…</div>
+                  </div>
+                </div>
+                <div style="margin-bottom:8px">
+        
+      </div>
+                <div id="vto-rocks-list" style="flex:1;overflow-y:auto;min-height:0">
+                  <div class="loading-row"><span class="spinner-sm"></span></div>
+                </div>
+              </div>
+
+              <!-- Issues List -->
+              <div class="vto-card">
+                <div class="vto-card-label"><i class="ph-thin ph-warning"></i> Issues List</div>
+                <div id="vto-issues-list" style="flex:1;overflow-y:auto;min-height:0;display:flex;flex-direction:column;gap:6px">
+                  <!-- Rendered by renderVTOPage -->
+                </div>
+              </div>
+
+            </div><!-- /vto-traction-grid -->
+            </div><!-- /vto-panel-traction -->
+          </div><!-- /max-width wrapper -->
+        </div>
+      </div>
+
+      <!-- ══ PAGE: TEAM / ORG CHART ══ -->
+      <div class="page" id="page-team">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Leadership Team</div>
+            <div class="page-subtitle">Org chart — roles, accountability &amp; live status</div>
+          </div>
+          <div class="page-header-right">
+            <div class="org-zoom-controls">
+              <div class="org-zoom-group">
+                <button onclick="orgZoom(-0.15)" class="org-zoom-btn" title="Zoom out">−</button>
+                <span id="org-zoom-label" class="org-zoom-label">100%</span>
+                <button onclick="orgZoom(+0.15)" class="org-zoom-btn" title="Zoom in">+</button>
+              </div>
+              <button onclick="orgResetView()" class="org-zoom-reset" title="Reset view">Reset</button>
+            </div>
+          </div>
+        </div>
+        <!-- Outer viewport: clips overflow, captures wheel/drag events -->
+        <div id="team-org-viewport" class="org-viewport">
+          <!-- Inner canvas: transformed by pan/zoom -->
+          <div id="team-org-canvas" class="org-canvas">
+            <div id="team-org-container">
+              <!-- Rendered by renderTeamPage() -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ PAGE: CONTENT ══ -->
+      <div class="page" id="page-content">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Content Planner</div>
+            <div class="page-subtitle">Track content from idea to published</div>
+          </div>
+          <div class="page-header-right" style="display:flex;gap:8px;align-items:center">
+            <div style="position:relative">
+              <input id="cp-search" type="text" placeholder="Search content…" style="padding:6px 12px 6px 30px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:12px;background:var(--surface);color:var(--text-primary);font-family:inherit;outline:none;width:180px">
+              <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--text-muted);pointer-events:none"><i class="ph-thin ph-magnifying-glass"></i></span>
+            </div>
+            <button class="btn-header-toggle" id="cp-view-toggle" onclick="toggleContentView()"><i class="ph-thin ph-squares-four"></i> Board</button>
+            <button class="btn-header" id="cp-add-btn">+ New Piece</button>
+          </div>
+        </div>
+        <div class="page-body" style="padding:20px 28px;flex:1;overflow-y:auto">
+          <div id="cp-stats" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-bottom:20px"></div>
+          <div id="cp-view-wrap"></div>
+        </div>
+      </div>
+
+      <!-- ══ PAGE: L10 MEETING ══ -->
+      <div class="page" id="page-l10">
+        <div class="page-header"><div><div class="page-title">L10 Meeting</div><div class="page-subtitle">Weekly Level 10 · Monday 09:00 · IDS, Rocks, Scorecard, To-Dos</div></div>
+          <div class="page-header-right"><span id="l10-next-badge" style="font-size:11px;font-weight:600;color:var(--text-secondary);padding:4px 10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm)">—</span>
+          <button class="btn-header" onclick="startL10Meeting()"><i class="ph-thin ph-play"></i> Start Meeting</button></div></div>
+        <div class="page-body"><div class="page-content">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px" id="l10-agenda-grid"></div>
+          <div id="l10-ids-section" style="margin-bottom:20px"></div>
+          <div id="l10-last-meeting"></div>
+        </div></div>
+      </div>
+
+      <!-- ══ PAGE: PRODUCTS (Product Research) ══ -->
+      <div class="page" id="page-clients">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Clients</div>
+            <div class="page-subtitle">Existing client base — contracts, MRR & relationships</div>
+          </div>
+          <div class="page-header-right" style="display:flex;gap:8px;align-items:center">
+            <div style="position:relative">
+              <input id="products-search" type="text" placeholder="Search clients…" oninput="renderProductsView()" style="padding:6px 12px 6px 30px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:12px;background:var(--surface);color:var(--text-primary);font-family:inherit;outline:none;width:180px">
+              <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--text-muted);pointer-events:none"><i class="ph-thin ph-magnifying-glass"></i></span>
+            </div>
+            <button class="btn-header" onclick="openProductModal()">+ Add Client</button>
+          </div>
+        </div>
+        <div class="page-body" style="padding:20px 28px">
+          <div id="products-stats" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-bottom:20px"></div>
+          <div id="products-filters" style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;align-items:center"></div>
+          <div id="products-table-wrap"></div>
+        </div>
+      </div>
+
+      <!-- ══ CLIENT ADD/EDIT MODAL ══ -->
+      <div class="modal-overlay" id="product-modal-overlay" onclick="if(event.target===this)closeProductModal()" style="display:none">
+        <div class="modal-box" style="max-width:520px">
+          <div class="modal-header">
+            <span class="modal-title" id="product-modal-title"><i class="ph-thin ph-users"></i> Add Client</span>
+            <button class="modal-close-btn" onclick="closeProductModal()">&#x2715;</button>
+          </div>
+          <div class="modal-body" style="padding:20px;display:flex;flex-direction:column;gap:14px">
+            <input type="hidden" id="product-edit-id" value="">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <div>
+                <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Company Name *</label>
+                <input id="product-company" type="text" placeholder="Acme Corp">
+              </div>
+              <div>
+                <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Contact Name</label>
+                <input id="product-contact" type="text" placeholder="John Smith">
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <div>
+                <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Email</label>
+                <input id="product-email" type="email" placeholder="john@acme.com">
+              </div>
+              <div>
+                <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Phone</label>
+                <input id="product-phone" type="tel" placeholder="+44 7700 900000">
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:2fr 1fr;gap:10px">
+              <div>
+                <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Service</label>
+                <input id="product-service" type="text" placeholder="AI Agent Build">
+              </div>
+              <div>
+                <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">MRR (£)</label>
+                <input id="product-mrr" type="number" step="1" min="0" placeholder="2000">
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+              <div>
+                <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Contract Start</label>
+                <input id="product-start" type="date">
+              </div>
+              <div>
+                <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Contract End</label>
+                <input id="product-end" type="date">
+              </div>
+              <div>
+                <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Status</label>
+                <select id="product-status">
+                  <option value="Active">Active</option><option value="Onboarding">Onboarding</option>
+                  <option value="Paused">Paused</option><option value="Churned">Churned</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Notes</label>
+              <textarea id="product-notes" rows="2" placeholder="Client notes…"></textarea>
+            </div>
+          </div>
+          <div class="modal-footer" style="padding:14px 20px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border)">
+            <button class="btn-danger" id="product-delete-btn" onclick="deleteProduct()" style="display:none">Delete</button>
+            <div style="display:flex;gap:8px;margin-left:auto">
+              <button onclick="closeProductModal()" class="btn-secondary">Cancel</button>
+              <button id="product-save-btn" onclick="saveProduct()" class="btn-primary">Add Client</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ AD CAMPAIGN ADD/EDIT MODAL ══ -->
+      <div class="modal-overlay" id="adcamp-modal-overlay" onclick="if(event.target===this)closeAdCampModal()" style="display:none">
+        <div class="modal-box" style="max-width:560px">
+          <div class="modal-header">
+            <span class="modal-title" id="adcamp-modal-title"><i class="ph-thin ph-paper-plane-tilt"></i> New Campaign</span>
+            <button class="modal-close-btn" onclick="closeAdCampModal()">&#x2715;</button>
+          </div>
+          <div class="modal-body" style="padding:20px;display:flex;flex-direction:column;gap:14px">
+            <input type="hidden" id="adcamp-edit-id" value="">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <div>
+                <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Campaign Name *</label>
+                <input id="adcamp-name" type="text" placeholder="SaaS CTOs Q1 Outreach">
+              </div>
+              <div>
+                <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Prospect List</label>
+                <div id="adcamp-list-picker-wrap">
+                  <select id="adcamp-list-select" onchange="_onListSelectChange()">
+                    <option value="">— No list —</option>
+                    <option value="__custom">Custom name…</option>
+                  </select>
+                  <input type="text" id="adcamp-list-custom" placeholder="Type list name…" style="display:none;margin-top:6px">
+                </div>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <div>
+                <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Target Segment</label>
+                <input id="adcamp-budget" type="text" placeholder="SaaS founders, Agency owners…">
+              </div>
+              <div>
+                <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Status</label>
+                <select id="adcamp-status">
+                  <option value="Draft">Draft</option>
+                  <option value="Active">Active</option>
+                  <option value="Paused">Paused</option>
+                  <option value="Completed">Completed</option>
+                </select>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <div>
+                <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Start Date</label>
+                <input id="adcamp-start" type="date">
+              </div>
+              <div>
+                <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">End Date</label>
+                <input id="adcamp-end" type="date">
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+              <div>
+                <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Outreach Sent</label>
+                <input id="adcamp-outreach" type="number" placeholder="0">
+              </div>
+              <div>
+                <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Opens</label>
+                <input id="adcamp-opens" type="number" placeholder="0">
+              </div>
+              <div>
+                <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Pos Replies</label>
+                <input id="adcamp-replies" type="number" placeholder="0">
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+              <div>
+                <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Meetings Booked</label>
+                <input id="adcamp-meetings" type="number" placeholder="0">
+              </div>
+              <div>
+                <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Shows</label>
+                <input id="adcamp-shows" type="number" placeholder="0">
+              </div>
+              <div>
+                <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Closes</label>
+                <input id="adcamp-closes" type="number" placeholder="0">
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <div>
+                <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Pipeline Value (£)</label>
+                <input id="adcamp-pipeline" type="number" step="0.01" placeholder="0.00">
+              </div>
+              <div>
+                <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Cost (£)</label>
+                <input id="adcamp-cost" type="number" step="0.01" placeholder="0.00">
+              </div>
+            </div>
+            <div>
+              <label style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;display:block">Notes</label>
+              <textarea id="adcamp-notes" rows="2" placeholder="Campaign notes…"></textarea>
+            </div>
+          </div>
+          <div class="modal-footer" style="padding:14px 20px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border)">
+            <button class="btn-danger" id="adcamp-delete-btn" onclick="deleteAdCampaign()" style="display:none">Delete</button>
+            <div style="display:flex;gap:8px;margin-left:auto">
+              <button onclick="closeAdCampModal()" class="btn-secondary">Cancel</button>
+              <button id="adcamp-save-btn" onclick="saveAdCampaign()" class="btn-primary">Add Campaign</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ CAMPAIGN DETAIL MODAL ══ -->
+      <div class="modal-overlay" id="campaign-detail-overlay" onclick="if(event.target===this)closeCampaignDetail()" style="display:none">
+        <div class="modal-box" style="max-width:720px;max-height:90vh;overflow-y:auto">
+          <div class="modal-header" style="position:sticky;top:0;background:var(--surface);z-index:2">
+            <span class="modal-title" id="campaign-detail-title"><i class="ph-thin ph-paper-plane-tilt"></i> Campaign</span>
+            <button class="modal-close-btn" onclick="closeCampaignDetail()">&#x2715;</button>
+          </div>
+          <div class="modal-body" style="padding:20px" id="campaign-detail-body">
+            <!-- filled by JS -->
+          </div>
+          <div class="modal-footer" style="padding:14px 20px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border)">
+            <button onclick="closeCampaignDetail()" class="btn-secondary">Back to Campaigns</button>
+            <button id="campaign-detail-edit-btn" onclick="" class="btn-primary">Edit Campaign</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ PAGE: FUNNEL METRICS ══ -->
+
+
+      <!-- ══ PAGE: SETTINGS ══ -->
+      <div class="page" id="page-settings">
+        <div class="settings-page-body">
+          <div class="settings-page-wrap">
+
+            <!-- Left nav -->
+            <nav class="settings-nav">
+              <span class="settings-nav-section">General</span>
+              <button class="settings-nav-item active" data-panel="appearance">
+                <i class="ph-thin ph-palette settings-nav-icon"></i> Appearance
+              </button>
+              <button class="settings-nav-item" data-panel="layout">
+                <i class="ph-thin ph-layout settings-nav-icon"></i> Layout
+              </button>
+              <span class="settings-nav-section">Pages</span>
+              <button class="settings-nav-item" data-panel="dashboard">
+                <i class="ph-thin ph-chart-bar settings-nav-icon"></i> Dashboard
+              </button>
+              <button class="settings-nav-item" data-panel="scorecard">
+                <i class="ph-thin ph-chart-line-up settings-nav-icon"></i> Scorecard
+              </button>
+              <button class="settings-nav-item" data-panel="projects">
+                <i class="ph-thin ph-mountains settings-nav-icon"></i> Rocks
+              </button>
+              <button class="settings-nav-item" data-panel="todos">
+                <i class="ph-thin ph-check-square settings-nav-icon"></i> To-Dos
+              </button>
+              <button class="settings-nav-item" data-panel="issues">
+                <i class="ph-thin ph-warning settings-nav-icon"></i> Issues
+              </button>
+              <button class="settings-nav-item" data-panel="calendar">
+                <i class="ph-thin ph-calendar-blank settings-nav-icon"></i> Calendar
+              </button>
+              <button class="settings-nav-item" data-panel="pipeline">
+                <i class="ph-thin ph-currency-dollar settings-nav-icon"></i> Pipeline
+              </button>
+              <button class="settings-nav-item" data-panel="vto">
+                <i class="ph-thin ph-compass settings-nav-icon"></i> V/TO
+              </button>
+              <button class="settings-nav-item" data-panel="team">
+                <i class="ph-thin ph-users-three settings-nav-icon"></i> Team
+              </button>
+              <button class="settings-nav-item" data-panel="content">
+                <i class="ph-thin ph-film-strip settings-nav-icon"></i> Content
+              </button>
+              <button class="settings-nav-item" data-panel="l10">
+                <i class="ph-thin ph-handshake settings-nav-icon"></i> L10 Meeting
+              </button>
+              <button class="settings-nav-item" data-panel="clients">
+                <i class="ph-thin ph-address-book settings-nav-icon"></i> Clients
+              </button>
+              <span class="settings-nav-section">System</span>
+              <button class="settings-nav-item" data-panel="feed">
+                <i class="ph-thin ph-broadcast settings-nav-icon"></i> Live Feed
+              </button>
+              <button class="settings-nav-item" data-panel="integrations">
+                <i class="ph-thin ph-link settings-nav-icon"></i> Integrations
+              </button>
+              <button class="settings-nav-item" data-panel="about">
+                <i class="ph-thin ph-info settings-nav-icon"></i> About
+              </button>
+            </nav>
+
+            <!-- Right panels -->
+            <div class="settings-content">
+
+              <!-- ─ Appearance ─ -->
+              <div class="settings-panel active" id="sp-appearance">
+                <div class="settings-panel-title">Appearance</div>
+                <div class="settings-panel-sub">Control how Kaush Group looks and feels.</div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Theme</div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Dark Mode</div><div class="settings-sublabel">Switch to dark theme across all pages</div></div>
+                    <label class="toggle-switch"><input type="checkbox" id="toggle-dark"><div class="toggle-track"></div></label>
+                  </div>
+                </div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Typography</div>
+                  <div class="settings-row" style="flex-direction:column;align-items:stretch;gap:10px">
+                    <div><div class="settings-label">Font Size</div><div class="settings-sublabel">Base size for all text in the app</div></div>
+                    <div class="settings-slider">
+                      <span style="font-size:11px;color:var(--text-muted)">A</span>
+                      <input type="range" class="slider-input" id="slider-font" min="12" max="18" step="1" value="14">
+                      <span style="font-size:16px;color:var(--text-muted)">A</span>
+                      <span class="slider-value" id="slider-font-val">14px</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ─ Layout ─ -->
+              <div class="settings-panel" id="sp-layout">
+                <div class="settings-panel-title">Layout</div>
+                <div class="settings-panel-sub">Adjust spacing and density across the UI.</div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Density</div>
+                  <div class="settings-row" style="flex-direction:column;align-items:stretch;gap:10px">
+                    <div><div class="settings-label">UI Density</div><div class="settings-sublabel">How compact or spacious the interface feels</div></div>
+                    <div class="radio-group" id="density-group">
+                      <button class="radio-btn" data-density="0.8">Compact</button>
+                      <button class="radio-btn active" data-density="1">Normal</button>
+                      <button class="radio-btn" data-density="1.3">Spacious</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Sidebar</div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Collapsed by default</div><div class="settings-sublabel">Start with the left nav in icon-only mode</div></div>
+                    <label class="toggle-switch"><input type="checkbox" id="toggle-nav-collapsed"><div class="toggle-track"></div></label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ─ Dashboard ─ -->
+              <div class="settings-panel" id="sp-dashboard">
+                <div class="settings-panel-title">Dashboard</div>
+                <div class="settings-panel-sub">Configure your company snapshot home page.</div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Greeting</div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Your Name</div><div class="settings-sublabel">Used in the greeting banner</div></div>
+                    <input type="text" id="settings-name" value="Utkarsh" style="padding:6px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;background:var(--surface-2);color:var(--text-primary);font-family:inherit;outline:none;width:140px">
+                  </div>
+                </div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Widgets</div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Personal Ambitions</div><div class="settings-sublabel">Pulls from memory table — your goals &amp; context</div></div>
+                    <label class="toggle-switch"><input type="checkbox" id="toggle-dash-ambitions" checked><div class="toggle-track"></div></label>
+                  </div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Recent Messages</div><div class="settings-sublabel">Latest messages from the live feed</div></div>
+                    <label class="toggle-switch"><input type="checkbox" id="toggle-dash-msgs" checked><div class="toggle-track"></div></label>
+                  </div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Scorecard Widget</div><div class="settings-sublabel">Show compact scorecard table on the dashboard</div></div>
+                    <label class="toggle-switch"><input type="checkbox" id="toggle-dash-scorecard" checked><div class="toggle-track"></div></label>
+                  </div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Open Issues Widget</div><div class="settings-sublabel">Show unresolved issues count and list</div></div>
+                    <label class="toggle-switch"><input type="checkbox" id="toggle-dash-issues" checked><div class="toggle-track"></div></label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ─ Scorecard ─ -->
+              <div class="settings-panel" id="sp-scorecard">
+                <div class="settings-panel-title">Scorecard</div>
+                <div class="settings-panel-sub">Weekly metrics tracking — goals, actuals, and status.</div>
+                <div class="settings-section">
+                  <div class="settings-section-title">History</div>
+                  <div class="settings-row" style="flex-direction:column;align-items:stretch;gap:10px">
+                    <div><div class="settings-label">Weeks to Display</div><div class="settings-sublabel">How many weeks of history to show in the full-page view</div></div>
+                    <div class="radio-group" id="scorecard-weeks-group">
+                      <button class="radio-btn" data-weeks="4">4 wks</button>
+                      <button class="radio-btn" data-weeks="8">8 wks</button>
+                      <button class="radio-btn active" data-weeks="13">13 wks</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Display</div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Week Start</div><div class="settings-sublabel">Scorecard weeks run Monday → Sunday</div></div>
+                    <span style="font-size:11px;color:var(--text-muted)">Monday</span>
+                  </div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Auto-raise Issue</div><div class="settings-sublabel">Create an Issue automatically when a metric goes Off Track</div></div>
+                    <label class="toggle-switch"><input type="checkbox" id="toggle-sc-auto-issue"><div class="toggle-track"></div></label>
+                  </div>
+                </div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Data</div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Table</div><div class="settings-sublabel">Metrics stored in the <code>agency_scorecard_metrics</code> Supabase table</div></div>
+                    <span style="font-size:11px;color:var(--green);font-weight:600">● Connected</span>
+                  </div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Canonical Metrics</div><div class="settings-sublabel">7 metrics seeded — Outbound, Calls, Content, Approval, Turnaround, Revenue, Health</div></div>
+                    <span style="font-size:11px;color:var(--text-muted)">7 active</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ─ Rocks ─ -->
+              <div class="settings-panel" id="sp-projects">
+                <div class="settings-panel-title">Rocks</div>
+                <div class="settings-panel-sub">Quarterly priorities — tracking, milestones, and to-dos.</div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Display</div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Default Filter</div><div class="settings-sublabel">Which quarter to show on load</div></div>
+                    <span style="font-size:11px;color:var(--text-muted)">Current quarter</span>
+                  </div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Show All Quarters</div><div class="settings-sublabel">Display rocks from every quarter in a grouped view</div></div>
+                    <label class="toggle-switch"><input type="checkbox" id="toggle-rocks-all-q"><div class="toggle-track"></div></label>
+                  </div>
+                </div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Data</div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Table</div><div class="settings-sublabel">Rocks stored in the <code>rocks</code> Supabase table</div></div>
+                    <span style="font-size:11px;color:var(--green);font-weight:600">��� Connected</span>
+                  </div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Milestones</div><div class="settings-sublabel">Stored in the <code>rock_milestones</code> table</div></div>
+                    <span style="font-size:11px;color:var(--green);font-weight:600">● Connected</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ─ To-Dos ─ -->
+              <div class="settings-panel" id="sp-todos">
+                <div class="settings-panel-title">To-Dos</div>
+                <div class="settings-panel-sub">Task queue — priorities, assignment, and visibility.</div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Display</div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Show Completed</div><div class="settings-sublabel">Include done to-dos in kanban columns</div></div>
+                    <label class="toggle-switch"><input type="checkbox" id="toggle-show-done" checked><div class="toggle-track"></div></label>
+                  </div>
+                </div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Defaults</div>
+                  <div class="settings-row" style="flex-direction:column;align-items:stretch;gap:10px">
+                    <div><div class="settings-label">Default Priority</div><div class="settings-sublabel">Priority assigned to new to-dos created from this app</div></div>
+                    <div class="radio-group" id="todo-priority-group">
+                      <button class="radio-btn active" data-priority="normal">Standard</button>
+                      <button class="radio-btn" data-priority="high">Urgent</button>
+                    </div>
+                  </div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Default Assignee</div><div class="settings-sublabel">Agent pre-selected when creating a new to-do</div></div>
+                    <span style="font-size:11px;color:var(--text-muted)">Jarvis</span>
+                  </div>
+                </div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Data</div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Table</div><div class="settings-sublabel">To-dos stored in the <code>todos</code> Supabase table</div></div>
+                    <span style="font-size:11px;color:var(--green);font-weight:600">● Connected</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ─ Issues ─ -->
+              <div class="settings-panel" id="sp-issues">
+                <div class="settings-panel-title">Issues</div>
+                <div class="settings-panel-sub">Track, escalate and resolve problems through IDS.</div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Display</div>
+                  <div class="settings-row" style="flex-direction:column;align-items:stretch;gap:10px">
+                    <div><div class="settings-label">Default Filter</div><div class="settings-sublabel">Which issue status to show on page load</div></div>
+                    <div class="radio-group" id="issues-default-filter-group">
+                      <button class="radio-btn active" data-filter="open">Open</button>
+                      <button class="radio-btn" data-filter="ids">In IDS</button>
+                      <button class="radio-btn" data-filter="all">All</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Automation</div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Scorecard → Issue</div><div class="settings-sublabel">Auto-create an issue when a metric goes Off Track for 2+ weeks</div></div>
+                    <label class="toggle-switch"><input type="checkbox" id="toggle-issue-auto"><div class="toggle-track"></div></label>
+                  </div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">IDS Reminder</div><div class="settings-sublabel">Ping Telegram if an issue sits in IDS for more than 7 days</div></div>
+                    <label class="toggle-switch"><input type="checkbox" id="toggle-ids-reminder"><div class="toggle-track"></div></label>
+                  </div>
+                </div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Data</div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Table</div><div class="settings-sublabel">Issues stored in the <code>issues</code> Supabase table</div></div>
+                    <span style="font-size:11px;color:var(--green);font-weight:600">● Connected</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ─ Calendar ─ -->
+              <div class="settings-panel" id="sp-calendar">
+                <div class="settings-panel-title">Calendar</div>
+                <div class="settings-panel-sub">Schedule, deadlines, and recurring meeting cadence.</div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Connection</div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Google Calendar</div><div class="settings-sublabel">Connect via GOOGLE_SERVICE_ACCOUNT_PATH in .env</div></div>
+                    <span style="font-size:11px;color:var(--text-muted)">— Not connected</span>
+                  </div>
+                </div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Display</div>
+                  <div class="settings-row" style="flex-direction:column;align-items:stretch;gap:10px">
+                    <div><div class="settings-label">Week Start</div><div class="settings-sublabel">First day shown in the weekly view</div></div>
+                    <div class="radio-group" id="cal-week-start-group">
+                      <button class="radio-btn active" data-day="mon">Monday</button>
+                      <button class="radio-btn" data-day="sun">Sunday</button>
+                    </div>
+                  </div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Show Weekends</div><div class="settings-sublabel">Include Saturday and Sunday in the week view</div></div>
+                    <label class="toggle-switch"><input type="checkbox" id="toggle-cal-weekends"><div class="toggle-track"></div></label>
+                  </div>
+                </div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Recurring Meetings</div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">L10 Meeting</div><div class="settings-sublabel">Weekly Level 10 — Monday 09:00</div></div>
+                    <span style="font-size:11px;color:var(--green);font-weight:600">● Scheduled</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ─ Notes ─ -->
+              <div class="settings-panel" id="sp-notes">
+                <div class="settings-panel-title">Notes</div>
+                <div class="settings-panel-sub">Manage how notes are stored and displayed.</div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Display</div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Card Layout</div><div class="settings-sublabel">Masonry columns — like Google Keep</div></div>
+                    <span style="font-size:11px;color:var(--text-muted)">Masonry</span>
+                  </div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Context Filter</div><div class="settings-sublabel">Hide <code>utkarsh_context</code> rows from Notes (shown in Dashboard instead)</div></div>
+                    <label class="toggle-switch"><input type="checkbox" id="toggle-notes-filter" checked><div class="toggle-track"></div></label>
+                  </div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Pinned Notes First</div><div class="settings-sublabel">Show pinned notes at the top of the board</div></div>
+                    <label class="toggle-switch"><input type="checkbox" id="toggle-notes-pinned" checked><div class="toggle-track"></div></label>
+                  </div>
+                </div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Storage</div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Supabase Table</div><div class="settings-sublabel">Notes are saved to the <code>memory</code> table with source: notes</div></div>
+                    <span style="font-size:11px;color:var(--green);font-weight:600">● Connected</span>
+                  </div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Scope</div><div class="settings-sublabel">All notes written here use scope: personal</div></div>
+                    <span style="font-size:11px;color:var(--text-muted)">personal</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ─ V/TO ─ -->
+              <div class="settings-panel" id="sp-vto">
+                <div class="settings-panel-title">V/TO</div>
+                <div class="settings-panel-sub">Vision, Traction, and Organiser — your company operating plan.</div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Default Tab</div>
+                  <div class="settings-row" style="flex-direction:column;align-items:stretch;gap:10px">
+                    <div><div class="settings-label">Open V/TO on</div><div class="settings-sublabel">Which tab loads when you navigate to the V/TO page</div></div>
+                    <div class="radio-group" id="vto-default-tab-group">
+                      <button class="radio-btn active" data-tab="vision">Vision</button>
+                      <button class="radio-btn" data-tab="traction">Traction</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Quarter</div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Current Quarter</div><div class="settings-sublabel">Auto-detected from system date</div></div>
+                    <span style="font-size:11px;color:var(--text-muted)" id="settings-vto-quarter">Q1 2026</span>
+                  </div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Annual Goals</div><div class="settings-sublabel">Loaded from <code>goals</code> table with scope: 1_year_plan</div></div>
+                    <span style="font-size:11px;color:var(--text-muted)">7 active</span>
+                  </div>
+                </div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Data</div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">VTO Fields</div><div class="settings-sublabel">Stored in the <code>memory</code> table with source: vto</div></div>
+                    <span style="font-size:11px;color:var(--green);font-weight:600">● Connected</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ─ Team ─ -->
+              <div class="settings-panel" id="sp-team">
+                <div class="settings-panel-title">Team</div>
+                <div class="settings-panel-sub">Agent org chart — roles, accountability, and live status.</div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Display</div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Show Agent Bio</div><div class="settings-sublabel">Display role description under each agent card in the org chart</div></div>
+                    <label class="toggle-switch"><input type="checkbox" id="toggle-team-bio" checked><div class="toggle-track"></div></label>
+                  </div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Show Status Dot</div><div class="settings-sublabel">Green/amber/red dot indicating agent activity</div></div>
+                    <label class="toggle-switch"><input type="checkbox" id="toggle-team-status" checked><div class="toggle-track"></div></label>
+                  </div>
+                </div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Agents</div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Squad size</div><div class="settings-sublabel">Jarvis, Quinn, Archie, Kai, Iris, Dash, Sola, Luna, Echo</div></div>
+                    <span style="font-size:11px;color:var(--text-muted)">9 agents</span>
+                  </div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Hierarchy</div><div class="settings-sublabel">Utkarsh (CEO) → Jarvis (Orchestrator) → 8 specialists</div></div>
+                    <span style="font-size:11px;color:var(--text-muted)">2 levels</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ─ Pipeline ─ -->
+              <div class="settings-panel" id="sp-pipeline">
+                <div class="settings-panel-title">Pipeline</div>
+                <div class="settings-panel-sub">Supplier pipeline — board or table view on load.</div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Default View</div>
+                  <div class="settings-row" style="flex-direction:column;align-items:stretch;gap:10px">
+                    <div><div class="settings-label">Open Pipeline as</div><div class="settings-sublabel">Which layout loads when you navigate to the Pipeline page</div></div>
+                    <div class="radio-group" id="pipeline-view-group">
+                      <button class="radio-btn" data-view="board">Board</button>
+                      <button class="radio-btn active" data-view="table">Table</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Stages</div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Pipeline Stages</div><div class="settings-sublabel">Research → Contacted → Samples → Negotiation → Approved → Active</div></div>
+                    <span style="font-size:11px;color:var(--text-muted)">6 stages</span>
+                  </div>
+                </div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Data</div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Table</div><div class="settings-sublabel">Suppliers stored in the <code>suppliers</code> Supabase table</div></div>
+                    <span style="font-size:11px;color:var(--green);font-weight:600">● Connected</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ─ Content ─ -->
+              <div class="settings-panel" id="sp-content">
+                <div class="settings-panel-title">Content Planner</div>
+                <div class="settings-panel-sub">Content pipeline from idea to published.</div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Default View</div>
+                  <div class="settings-row" style="flex-direction:column;align-items:stretch;gap:10px">
+                    <div><div class="settings-label">Open Content as</div><div class="settings-sublabel">Which layout loads when you navigate to the Content page</div></div>
+                    <div class="radio-group" id="content-view-group">
+                      <button class="radio-btn" data-view="board">Board</button>
+                      <button class="radio-btn active" data-view="table">Table</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Pipeline</div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Stages</div><div class="settings-sublabel">Idea → Research → Drafting → Review → Scheduled → Published</div></div>
+                    <span style="font-size:11px;color:var(--text-muted)">6 stages</span>
+                  </div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Default Assignee</div><div class="settings-sublabel">Agent pre-selected on new content cards</div></div>
+                    <span style="font-size:11px;color:var(--text-muted)">Echo</span>
+                  </div>
+                </div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Storage</div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Storage location</div><div class="settings-sublabel">Content cards are saved in browser localStorage</div></div>
+                    <span style="font-size:11px;color:var(--text-muted)">localStorage</span>
+                  </div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Clear board</div><div class="settings-sublabel">Remove all content cards permanently</div></div>
+                    <button class="btn-danger" onclick="if(confirm('Clear all content cards?')){sbQuery('content_tracker',{}).then(rows=>(rows||[]).forEach(r=>sbUpdate('content_tracker',r.id,{deleted_at:new Date().toISOString()}))).then(()=>renderContentPlanner());}" style="padding:5px 12px;font-size:11px">Clear board</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ─ L10 Meeting ─ -->
+              <div class="settings-panel" id="sp-l10">
+                <div class="settings-panel-title">L10 Meeting</div>
+                <div class="settings-panel-sub">Weekly Level 10 rhythm — IDS, Rocks, Scorecard, To-Dos.</div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Schedule</div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Meeting Day</div><div class="settings-sublabel">Which day the weekly L10 runs</div></div>
+                    <span style="font-size:11px;color:var(--text-muted)">Monday</span>
+                  </div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Start Time</div><div class="settings-sublabel">Scheduled start for the weekly meeting</div></div>
+                    <span style="font-size:11px;color:var(--text-muted)">09:00</span>
+                  </div>
+                </div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Agenda</div>
+                  <div class="settings-row" style="flex-direction:column;align-items:stretch;gap:10px">
+                    <div><div class="settings-label">Duration</div><div class="settings-sublabel">Total meeting time allocated</div></div>
+                    <div class="radio-group" id="l10-duration-group">
+                      <button class="radio-btn" data-mins="30">30 min</button>
+                      <button class="radio-btn active" data-mins="60">60 min</button>
+                      <button class="radio-btn" data-mins="90">90 min</button>
+                    </div>
+                  </div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Scorecard in Agenda</div><div class="settings-sublabel">Include scorecard review in the L10 agenda block</div></div>
+                    <label class="toggle-switch"><input type="checkbox" id="toggle-l10-scorecard" checked><div class="toggle-track"></div></label>
+                  </div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Rocks Check-in</div><div class="settings-sublabel">Include rock progress updates in the agenda</div></div>
+                    <label class="toggle-switch"><input type="checkbox" id="toggle-l10-rocks" checked><div class="toggle-track"></div></label>
+                  </div>
+                </div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Notification</div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Telegram Reminder</div><div class="settings-sublabel">Ping the squad group 30 minutes before the meeting starts</div></div>
+                    <label class="toggle-switch"><input type="checkbox" id="toggle-l10-ping"><div class="toggle-track"></div></label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ─ Drive ─ -->
+              <div class="settings-panel" id="sp-drive">
+                <div class="settings-panel-title">Drive</div>
+                <div class="settings-panel-sub">OpenClaw workspace files via Google Drive.</div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Connection</div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Google Drive</div><div class="settings-sublabel">Requires Drive API enabled on the service account</div></div>
+                    <span style="font-size:11px;color:var(--text-muted)">— Not connected</span>
+                  </div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Service Account</div><div class="settings-sublabel">claude-agents@claude-agent-squad.iam.gserviceaccount.com</div></div>
+                    <span style="font-size:11px;color:var(--green);font-weight:600">● Configured</span>
+                  </div>
+                </div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Folder</div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Root Folder ID</div><div class="settings-sublabel">Google Drive folder to browse when Drive is connected</div></div>
+                    <span style="font-size:11px;color:var(--text-muted);font-family:monospace">1SJB0fDe…</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ─ Live Feed ─ -->
+              <div class="settings-panel" id="sp-feed">
+                <div class="settings-panel-title">Live Feed</div>
+                <div class="settings-panel-sub">Control real-time polling and feed behaviour.</div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Polling</div>
+                  <div class="settings-row" style="flex-direction:column;align-items:stretch;gap:10px">
+                    <div><div class="settings-label">Quick Refresh Interval</div><div class="settings-sublabel">How often to-dos &amp; messages are polled from Supabase</div></div>
+                    <div class="radio-group" id="quick-interval-group">
+                      <button class="radio-btn" data-interval="4000">4s</button>
+                      <button class="radio-btn active" data-interval="8000">8s</button>
+                      <button class="radio-btn" data-interval="15000">15s</button>
+                      <button class="radio-btn" data-interval="30000">30s</button>
+                    </div>
+                  </div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Auto-scroll Feed</div><div class="settings-sublabel">Scroll to the newest entry on each update</div></div>
+                    <label class="toggle-switch"><input type="checkbox" id="toggle-autoscroll"><div class="toggle-track"></div></label>
+                  </div>
+                </div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Filters</div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Show System Messages</div><div class="settings-sublabel">Include agent heartbeats and status pings in the feed</div></div>
+                    <label class="toggle-switch"><input type="checkbox" id="toggle-feed-system"><div class="toggle-track"></div></label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ─ Integrations ─ -->
+              <div class="settings-panel" id="sp-integrations">
+                <div class="settings-panel-title">Integrations</div>
+                <div class="settings-panel-sub">Status of all external service connections.</div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Connected</div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Supabase</div><div class="settings-sublabel">Database for to-dos, messages, memory, goals, rocks, scorecard</div></div>
+                    <span style="font-size:11px;color:var(--green);font-weight:600">● Connected</span>
+                  </div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Telegram</div><div class="settings-sublabel">9 bots active — Jarvis orchestrates via telegram-handler.mjs</div></div>
+                    <span style="font-size:11px;color:var(--green);font-weight:600">● Active</span>
+                  </div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Google AI (Gemini)</div><div class="settings-sublabel">Embeddings and generation — GOOGLE_AI_API_KEY configured</div></div>
+                    <span style="font-size:11px;color:var(--green);font-weight:600">● Active</span>
+                  </div>
+                </div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Not Connected</div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Google Calendar</div><div class="settings-sublabel">Requires Drive API enabled on service account</div></div>
+                    <span style="font-size:11px;color:var(--text-muted)">— Not connected</span>
+                  </div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Google Drive</div><div class="settings-sublabel">Enable Drive API via the OpenClaw gateway</div></div>
+                    <span style="font-size:11px;color:var(--text-muted)">— Not connected</span>
+                  </div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">ElevenLabs</div><div class="settings-sublabel">Voice synthesis — ELEVENLABS_API_KEY not set</div></div>
+                    <span style="font-size:11px;color:var(--text-muted)">— Not connected</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ─ About ─ -->
+              <div class="settings-panel" id="sp-about">
+                <div class="settings-panel-title">About OpenClaw</div>
+                <div class="settings-panel-sub">System information, version, and reset options.</div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Version</div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">App</div><div class="settings-sublabel">Mission Control dashboard</div></div>
+                    <span style="font-size:11px;color:var(--text-muted)">OpenClaw v2.0</span>
+                  </div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Stack</div></div>
+                    <span style="font-size:11px;color:var(--text-muted)">Vanilla JS · Supabase · Telegram</span>
+                  </div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Agent SDK</div></div>
+                    <span style="font-size:11px;color:var(--text-muted)">Claude Sonnet 4.6</span>
+                  </div>
+                </div>
+                <div class="settings-section">
+                  <div class="settings-section-title">Reset</div>
+                  <div class="settings-row">
+                    <div><div class="settings-label">Reset all settings</div><div class="settings-sublabel">Restores defaults for theme, density, intervals</div></div>
+                    <button class="btn-reset" id="btn-reset-settings" style="width:auto;padding:6px 14px">↩ Reset</button>
+                  </div>
+                </div>
+              </div>
+
+            </div><!-- /settings-content -->
+          </div><!-- /settings-page-wrap -->
+        </div><!-- /settings-page-body -->
+      </div><!-- /page-settings -->
+
+    </div><!-- /page-area -->
+  </div><!-- /app-shell -->
+
+  <!-- ====== SETTINGS OVERLAY ====== -->
+  <div class="settings-overlay" id="settings-overlay">
+    <div class="settings-backdrop" id="settings-backdrop"></div>
+    <div class="settings-drawer">
+
+      <div class="settings-header">
+        <span class="settings-title"><i class="ph-thin ph-gear-six"></i> Settings</span>
+        <button class="settings-close" id="settings-close">✕</button>
+      </div>
+
+      <div class="settings-body">
+
+        <!-- Appearance -->
+        <div class="settings-section">
+          <div class="settings-section-title">Appearance</div>
+
+          <!-- Dark mode -->
+          <div class="settings-row">
+            <div>
+              <div class="settings-label">Dark Mode</div>
+              <div class="settings-sublabel">Switch to dark theme</div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="toggle-dark">
+              <div class="toggle-track"></div>
+            </label>
+          </div>
+
+          <!-- Font size -->
+          <div class="settings-row" style="flex-direction:column;align-items:stretch;gap:8px;">
+            <div class="settings-label">Font Size</div>
+            <div class="settings-slider">
+              <span style="font-size:11px;color:var(--text-muted)">A</span>
+              <input type="range" class="slider-input" id="slider-font"
+                     min="12" max="18" step="1" value="14">
+              <span style="font-size:16px;color:var(--text-muted)">A</span>
+              <span class="slider-value" id="slider-font-val">14px</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-divider"></div>
+
+        <!-- Layout -->
+        <div class="settings-section">
+          <div class="settings-section-title">Layout</div>
+
+          <!-- Density -->
+          <div class="settings-row" style="flex-direction:column;align-items:stretch;gap:8px;">
+            <div class="settings-label">Density</div>
+            <div class="radio-group" id="density-group">
+              <button class="radio-btn" data-density="0.8">Compact</button>
+              <button class="radio-btn active" data-density="1">Normal</button>
+              <button class="radio-btn" data-density="1.3">Spacious</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-divider"></div>
+
+        <!-- Live Feed -->
+        <div class="settings-section">
+          <div class="settings-section-title">Live Feed</div>
+
+          <!-- Quick refresh interval -->
+          <div class="settings-row" style="flex-direction:column;align-items:stretch;gap:8px;">
+            <div>
+              <div class="settings-label">Quick Refresh</div>
+              <div class="settings-sublabel">To-Dos + messages polling</div>
+            </div>
+            <div class="radio-group" id="quick-interval-group">
+              <button class="radio-btn" data-interval="4000">4s</button>
+              <button class="radio-btn active" data-interval="8000">8s</button>
+              <button class="radio-btn" data-interval="15000">15s</button>
+              <button class="radio-btn" data-interval="30000">30s</button>
+            </div>
+          </div>
+
+          <!-- Auto-scroll feed -->
+          <div class="settings-row">
+            <div>
+              <div class="settings-label">Auto-scroll Feed</div>
+              <div class="settings-sublabel">Scroll to newest on update</div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="toggle-autoscroll">
+              <div class="toggle-track"></div>
+            </label>
+          </div>
+        </div>
+
+        <div class="settings-divider"></div>
+
+        <!-- Kanban -->
+        <div class="settings-section">
+          <div class="settings-section-title">Kanban</div>
+
+          <!-- Show done tasks -->
+          <div class="settings-row">
+            <div>
+              <div class="settings-label">Show Done To-Dos</div>
+              <div class="settings-sublabel">Include completed in board</div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="toggle-show-done" checked>
+              <div class="toggle-track"></div>
+            </label>
+          </div>
+        </div>
+
+        <div class="settings-divider"></div>
+
+        <!-- Weather Location -->
+        <div class="settings-section">
+          <div class="settings-section-title">Weather</div>
+          <div class="settings-row" style="flex-direction:column;align-items:stretch;gap:8px;">
+            <div class="settings-label">Location</div>
+            <div class="radio-group" id="weather-location-group">
+              <button class="radio-btn active" data-location="harlow">Harlow</button>
+              <button class="radio-btn" data-location="barcelona">Barcelona</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="settings-footer">
+        <button class="btn-reset" id="btn-reset-settings">↩ Reset to Defaults</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== AGENT CARD MODAL ====== -->
+  <div class="agent-modal-overlay" id="agent-modal-overlay">
+    <div class="agent-modal-backdrop" id="agent-modal-backdrop"></div>
+    <div class="agent-modal" id="agent-modal">
+
+      <!-- Hero -->
+      <div class="agent-modal-hero">
+        <div class="agent-modal-hero-top">
+          <div class="agent-modal-avatar" id="amod-avatar"></div>
+          <div class="agent-modal-identity">
+            <div class="agent-modal-name" id="amod-name">—</div>
+            <div class="agent-modal-role" id="amod-role">—</div>
+            <div class="agent-modal-bio" id="amod-bio"></div>
+            <div class="agent-modal-status-row">
+              <div class="agent-modal-status-dot" id="amod-dot"></div>
+              <span class="agent-modal-status-word" id="amod-status-word">—</span>
+              <span class="agent-modal-status-since" id="amod-status-since"></span>
+            </div>
+          </div>
+          <button class="agent-modal-close" id="agent-modal-close">✕</button>
+        </div>
+        <div class="agent-modal-stats" id="amod-stats">
+          <div class="agent-modal-stat agent-modal-stat-btn active-stat" id="amod-stat-card-tasks" onclick="switchAgentModalTab('tasks')">
+            <div class="agent-modal-stat-num" id="amod-stat-tasks">—</div>
+            <div class="agent-modal-stat-label">Active To-Dos</div>
+          </div>
+          <div class="agent-modal-stat agent-modal-stat-btn" id="amod-stat-card-done" onclick="switchAgentModalTab('done')">
+            <div class="agent-modal-stat-num" id="amod-stat-done">—</div>
+            <div class="agent-modal-stat-label">Done</div>
+          </div>
+          <div class="agent-modal-stat agent-modal-stat-btn" id="amod-stat-card-logs" onclick="switchAgentModalTab('logs')">
+            <div class="agent-modal-stat-num" id="amod-stat-msgs">—</div>
+            <div class="agent-modal-stat-label">Logs</div>
+          </div>
+          <div class="agent-modal-stat agent-modal-stat-btn" id="amod-stat-card-memory" onclick="switchAgentModalTab('memory')">
+            <div class="agent-modal-stat-num" id="amod-stat-mem">—</div>
+            <div class="agent-modal-stat-label">Memories</div>
+          </div>
+          <div class="agent-modal-stat agent-modal-stat-btn" id="amod-stat-card-cost" onclick="switchAgentModalTab('cost')">
+            <div class="agent-modal-stat-num" id="amod-stat-cost">—</div>
+            <div class="agent-modal-stat-label">Cost</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Body (tab content) -->
+      <div class="agent-modal-body" id="amod-body">
+        <div class="agent-modal-loading"><span class="spinner-sm"></span></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ====== MOBILE BOTTOM NAV ====== -->
+  <nav class="mobile-nav" id="mobile-nav">
+    <button class="mobile-nav-btn active" data-page="dashboard" onclick="navigateTo('dashboard')">
+      <i class="ph-thin ph-house mobile-nav-icon"></i>
+      <span class="mobile-nav-label">Home</span>
+    </button>
+    <button class="mobile-nav-btn" data-page="tasks" onclick="navigateTo('tasks')">
+      <i class="ph-thin ph-check-square mobile-nav-icon"></i>
+      <span class="mobile-nav-label">To-Dos</span>
+      <span class="mobile-nav-badge" id="mobile-tasks-badge" style="display:none">0</span>
+    </button>
+    <button class="mobile-nav-btn" data-page="projects" onclick="navigateTo('projects')">
+      <i class="ph-thin ph-mountains mobile-nav-icon"></i>
+      <span class="mobile-nav-label">Rocks</span>
+    </button>
+    <button class="mobile-nav-btn" data-page="issues" onclick="navigateTo('issues')">
+      <i class="ph-thin ph-warning mobile-nav-icon"></i>
+      <span class="mobile-nav-label">Issues</span>
+    </button>
+    <button class="mobile-nav-btn" id="mobile-more-btn" onclick="toggleMobileMenu()">
+      <i class="ph-thin ph-dots-three mobile-nav-icon"></i>
+      <span class="mobile-nav-label">More</span>
+      <span class="mobile-nav-badge" id="mobile-notif-badge" style="display:none"></span>
+    </button>
+  </nav>
+
+  <!-- ====== MOBILE MORE MENU ====== -->
+  <div id="mobile-more-overlay" style="display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.4)" onclick="toggleMobileMenu()">
+    <div onclick="event.stopPropagation()" style="position:absolute;bottom:0;left:0;right:0;background:var(--surface);border-radius:20px 20px 0 0;padding:16px 0 calc(16px + env(safe-area-inset-bottom,0px));box-shadow:0 -4px 24px rgba(0,0,0,0.15)">
+      <div style="width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 16px"></div>
+
+      <!-- Operate -->
+      <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);padding:4px 20px 6px">Operate</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:0 8px">
+        <button onclick="navigateTo('insights');toggleMobileMenu()" style="display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 4px;border:none;background:none;cursor:pointer;border-radius:var(--radius);-webkit-tap-highlight-color:transparent">
+          <i class="ph-thin ph-chart-pie-slice" style="font-size:24px;color:var(--text-secondary)"></i>
+          <span style="font-size:10px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.04em">Insights</span>
+        </button>
+      </div>
+
+      <!-- Grow -->
+      <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);padding:12px 20px 6px">Grow</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:0 8px">
+        <button onclick="navigateTo('pipeline');toggleMobileMenu()" style="display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 4px;border:none;background:none;cursor:pointer;border-radius:var(--radius);-webkit-tap-highlight-color:transparent">
+          <i class="ph-thin ph-user-focus" style="font-size:24px;color:var(--text-secondary)"></i>
+          <span style="font-size:10px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.04em">Prospects</span>
+        </button>
+        <button onclick="navigateTo('campaigns');toggleMobileMenu()" style="display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 4px;border:none;background:none;cursor:pointer;border-radius:var(--radius);-webkit-tap-highlight-color:transparent">
+          <i class="ph-thin ph-paper-plane-tilt" style="font-size:24px;color:var(--text-secondary)"></i>
+          <span style="font-size:10px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.04em">Campaigns</span>
+        </button>
+        <button onclick="navigateTo('content');toggleMobileMenu()" style="display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 4px;border:none;background:none;cursor:pointer;border-radius:var(--radius);-webkit-tap-highlight-color:transparent">
+          <i class="ph-thin ph-film-strip" style="font-size:24px;color:var(--text-secondary)"></i>
+          <span style="font-size:10px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.04em">Content</span>
+        </button>
+        <button onclick="navigateTo('clients');toggleMobileMenu()" style="display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 4px;border:none;background:none;cursor:pointer;border-radius:var(--radius);-webkit-tap-highlight-color:transparent">
+          <i class="ph-thin ph-users" style="font-size:24px;color:var(--text-secondary)"></i>
+          <span style="font-size:10px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.04em">Clients</span>
+        </button>
+      </div>
+
+      <!-- Strategy -->
+      <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);padding:12px 20px 6px">Strategy</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:0 8px">
+        <button onclick="navigateTo('scorecard');toggleMobileMenu()" style="display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 4px;border:none;background:none;cursor:pointer;border-radius:var(--radius);-webkit-tap-highlight-color:transparent">
+          <i class="ph-thin ph-chart-bar" style="font-size:24px;color:var(--text-secondary)"></i>
+          <span style="font-size:10px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.04em">Scorecard</span>
+        </button>
+        <button onclick="navigateTo('vto');toggleMobileMenu()" style="display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 4px;border:none;background:none;cursor:pointer;border-radius:var(--radius);-webkit-tap-highlight-color:transparent">
+          <i class="ph-thin ph-compass" style="font-size:24px;color:var(--text-secondary)"></i>
+          <span style="font-size:10px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.04em">V/TO</span>
+        </button>
+      </div>
+
+      <!-- Team -->
+      <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);padding:12px 20px 6px">Team</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:0 8px">
+        <button onclick="navigateTo('team');toggleMobileMenu()" style="display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 4px;border:none;background:none;cursor:pointer;border-radius:var(--radius);-webkit-tap-highlight-color:transparent">
+          <i class="ph-thin ph-users-three" style="font-size:24px;color:var(--text-secondary)"></i>
+          <span style="font-size:10px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.04em">Team</span>
+        </button>
+        <button onclick="navigateTo('l10');toggleMobileMenu()" style="display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 4px;border:none;background:none;cursor:pointer;border-radius:var(--radius);-webkit-tap-highlight-color:transparent">
+          <i class="ph-thin ph-handshake" style="font-size:24px;color:var(--text-secondary)"></i>
+          <span style="font-size:10px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.04em">L10</span>
+        </button>
+        <button onclick="navigateTo('calendar');toggleMobileMenu()" style="display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 4px;border:none;background:none;cursor:pointer;border-radius:var(--radius);-webkit-tap-highlight-color:transparent">
+          <i class="ph-thin ph-calendar-blank" style="font-size:24px;color:var(--text-secondary)"></i>
+          <span style="font-size:10px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.04em">Calendar</span>
+        </button>
+      </div>
+
+      <!-- Settings -->
+      <div style="border-top:1px solid var(--border-light);margin:12px 16px 0;padding-top:12px">
+        <button onclick="navigateTo('settings');toggleMobileMenu()" style="display:flex;align-items:center;gap:10px;padding:10px 8px;border:none;background:none;cursor:pointer;border-radius:var(--radius);-webkit-tap-highlight-color:transparent;width:100%">
+          <i class="ph-thin ph-gear-six" style="font-size:20px;color:var(--text-muted)"></i>
+          <span style="font-size:11px;font-weight:600;color:var(--text-muted)">Settings</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== FEED LOG DETAIL DIALOG ====== -->
+  <div id="feed-detail-overlay" class="hidden" onclick="if(event.target===this)closeFeedDetail()">
+    <div id="feed-detail-box">
+      <div class="fdlg-header">
+        <div id="fdlg-parties" style="display:flex;align-items:center;gap:6px;flex:1;min-width:0;flex-wrap:wrap"></div>
+        <span class="fdlg-type-chip" id="fdlg-type" style="flex-shrink:0">—</span>
+        <button class="fdlg-close" onclick="closeFeedDetail()">✕</button>
+      </div>
+      <div class="fdlg-body">
+        <div class="fdlg-content-box" id="fdlg-content"></div>
+        <div id="fdlg-meta" style="display:none"></div>
+      </div>
+      <div class="fdlg-footer">
+        <span id="fdlg-rel-time" style="font-size:11px;font-weight:600;color:var(--text-secondary);flex:1"></span>
+        <span class="fdlg-ts" id="fdlg-ts"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== GOAL DETAIL DIALOG ====== -->
+  <div id="goal-detail-overlay" class="hidden" onclick="if(event.target===this)closeGoalDetail()">
+    <div style="background:var(--surface);border-radius:14px;border:1px solid var(--border);box-shadow:0 20px 60px rgba(100,90,130,0.15),0 4px 16px rgba(100,90,130,0.08);width:100%;max-width:480px;padding:24px 24px 20px;display:flex;flex-direction:column;gap:0;position:relative;animation:modalSlideUp 0.18s cubic-bezier(0.34,1.1,0.64,1)">
+      <button onclick="closeGoalDetail()" style="position:absolute;top:14px;right:14px;background:none;border:none;cursor:pointer;font-size:16px;color:var(--text-muted);line-height:1;padding:2px 6px">✕</button>
+      <div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:6px">Annual Goal</div>
+      <h2 id="gdlg-title" style="font-size:20px;font-weight:800;color:var(--text-primary);margin:0 0 16px;line-height:1.2;padding-right:24px"></h2>
+      <div id="gdlg-owner"></div>
+      <div style="margin-bottom:16px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          <div style="flex:1;height:6px;background:var(--border);border-radius:3px"><div id="gdlg-progress-bar" style="height:100%;width:0%;background:var(--primary);border-radius:3px;transition:width 0.4s"></div></div>
+          <span id="gdlg-progress-pct" style="font-size:12px;font-weight:800;color:var(--text-muted);min-width:32px;text-align:right">0%</span>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);font-weight:600">Progress to date</div>
+      </div>
+      <div style="border-top:1px solid var(--border-light);padding-top:14px">
+        <div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:8px">Why this matters</div>
+        <p id="gdlg-rationale" style="font-size:13px;line-height:1.65;color:var(--text-secondary);margin:0"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== TASK CARD EXPANDED MODAL ====== -->
+  <div class="card-modal-overlay" id="card-modal-overlay">
+    <div class="card-modal-backdrop" id="card-modal-backdrop"></div>
+    <div class="card-modal" id="card-modal">
+      <div class="card-modal-accent" id="card-modal-accent"></div>
+      <div class="card-modal-body">
+        <div class="card-modal-header">
+          <button class="card-modal-back" id="card-modal-back" style="display:none" onclick="closeCardModalBackToAgent()">← Back</button>
+          <span class="card-modal-priority" id="card-modal-priority"></span>
+          <span class="card-modal-title" id="card-modal-title"></span>
+          <button class="card-modal-close" id="card-modal-close">✕</button>
+        </div>
+        <div class="card-modal-liner" id="card-modal-liner"></div>
+        <div class="card-modal-meta" id="card-modal-meta"></div>
+        <div class="card-modal-tags" id="card-modal-tags"></div>
+        <div class="card-modal-links" id="card-modal-links" style="display:none"></div>
+      </div>
+      <div class="card-modal-footer" id="card-modal-footer"></div>
+    </div>
+  </div>
+
+
+  <script>
+// ── DEBUG: capture any JS error and show it visibly on the page ──
+window.__dbgErrors = [];
+window.onerror = function(msg, src, line, col, err) {
+  const text = `JS ERROR line ${line}: ${msg}`;
+  window.__dbgErrors.push(text);
+  let bar = document.getElementById('__debug-bar');
+  if (!bar) {
+    bar = document.createElement('div');
+    bar.id = '__debug-bar';
+    bar.style = 'position:fixed;bottom:0;left:0;right:0;background:var(--red);color:#fff;font-size:11px;font-family:monospace;padding:6px 10px;z-index:99999;max-height:120px;overflow-y:auto;white-space:pre-wrap';
+    document.body.appendChild(bar);
+  }
+  bar.textContent = window.__dbgErrors.join('\n');
+  return false;
+};
+window.addEventListener('unhandledrejection', function(e) {
+  const text = `UNHANDLED REJECTION: ${e.reason?.message || e.reason}`;
+  window.__dbgErrors.push(text);
+  let bar = document.getElementById('__debug-bar');
+  if (!bar) {
+    bar = document.createElement('div');
+    bar.id = '__debug-bar';
+    bar.style = 'position:fixed;bottom:0;left:0;right:0;background:var(--red);color:#fff;font-size:11px;font-family:monospace;padding:6px 10px;z-index:99999;max-height:120px;overflow-y:auto;white-space:pre-wrap';
+    document.body.appendChild(bar);
+  }
+  bar.textContent = window.__dbgErrors.join('\n');
+});
+// ── END DEBUG ──
+  </script>
+
+  <!-- ═══ JS: Foundation (load order critical) ═══ -->
+  <script src="js/utils.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/modal-utils.js"></script>
+  <script src="js/settings.js"></script>
+  <script src="js/clock-weather.js"></script>
+  <script src="js/ticker.js"></script>
+
+  <!-- ═══ JS: Core Panels ═══ -->
+  <script src="js/agents-panel.js"></script>
+  <script src="js/kanban.js"></script>
+  <script src="js/feed.js"></script>
+  <script src="js/task-modal.js"></script>
+
+  <!-- ═══ JS: Feature Modules ═══ -->
+  <script src="js/goals-projects.js"></script>
+  <script src="js/issues.js"></script>
+  <script src="js/data-loading.js"></script>
+  <script src="js/agent-modal.js"></script>
+  <script src="js/notifications.js"></script>
+  <script src="js/polling.js"></script>
+
+  <!-- ═══ JS: Page Modules ═══ -->
+  <script src="js/scorecard.js"></script>
+  <script src="js/team-org.js"></script>
+  <script src="js/vto.js"></script>
+  <script src="js/l10.js"></script>
+  <script src="js/calendar.js"></script>
+  <script src="js/pipeline.js"></script>
+  <script src="js/clients.js"></script>
+  <script src="js/campaigns.js"></script>
+  <script src="js/content.js"></script>
+  <script src="js/insights.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/header-dropdowns.js"></script>
+
+  <!-- ═══ JS: Router + Boot (must be last) ═══ -->
+  <script src="js/router.js"></script>
+  <script src="js/boot.js"></script>
+
+  <!-- ═══ Chat Widget ═══ -->
+  <div id="mc-chat-widget"></div>
+  <script src="js/chat-widget.js"></script>
+</body>
+</html>
