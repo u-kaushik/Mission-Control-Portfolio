@@ -80,7 +80,7 @@ const SUPABASE_KEY = 'your-anon-key';
 Screenshots coming soon. Visit the live demo to see it in action.
 
 ## Live Demo
-demomissioncontrol.netlify.app
+https://demomissioncontrol.netlify.app
 
 The demo runs on synthetic data — no real personal information or API keys are used.
 
