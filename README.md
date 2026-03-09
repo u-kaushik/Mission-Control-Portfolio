@@ -35,73 +35,33 @@ This dashboard is the control surface. It consolidates team management, sales pi
 
 ## Tech Stack
 
-|
- Layer 
-|
- Technology 
-|
-|
----
-|
----
-|
-|
- Frontend 
-|
- Vanilla JavaScript — no framework, no build step, just fast SPA with client-side routing 
-|
-|
- Styling 
-|
- Custom CSS with design tokens, responsive layout (desktop sidebar + mobile bottom nav) 
-|
-|
- Database 
-|
- Supabase (PostgreSQL + REST API) 
-|
-|
- Charts 
-|
- Chart.js 
-|
-|
- Icons 
-|
- Phosphor Icons 
-|
-|
- Fonts 
-|
- Inter (Google Fonts) 
-|
-|
- Serverless 
-|
- Netlify Functions (chat proxy → Groq API) 
-|
-|
- Deployment 
-|
- Netlify + GitHub Actions CI/CD 
-|
+- **Frontend:** Vanilla JavaScript — no framework, no build step, just fast SPA with client-side routing
+- **Styling:** Custom CSS with design tokens, responsive layout (desktop sidebar + mobile bottom nav)
+- **Database:** Supabase (PostgreSQL + REST API)
+- **Charts:** Chart.js
+- **Icons:** Phosphor Icons
+- **Fonts:** Inter (Google Fonts)
+- **Serverless:** Netlify Functions (chat proxy → Groq API)
+- **Deployment:** Netlify + GitHub Actions CI/CD
 
 ## Project Structure
 
 
-├── index.html # Single-page shell with all markup
-├── js/
-│ ├── boot.js # App initialization and data seeding
-│ ├── config.js # Agent definitions and configuration
-│ ├── state.js # Centralized state object (MC)
-│ ├── router.js # Client-side page routing
-│ ├── supabase.js # Database REST helpers
-│ ├── demo-data.js # Sample data for demo mode
-│ └── *.js # Feature modules (one per page/feature)
-├── css/
-│ └── app.css # All styles, design tokens, responsive breakpoints
-└── netlify/
-└── functions/ # Serverless chat proxy
+## Project Structure
+
+    ├── index.html          # Single-page shell with all markup
+    ├── js/
+    │   ├── boot.js         # App initialization and data seeding
+    │   ├── config.js       # Agent definitions and configuration
+    │   ├── state.js        # Centralized state object (MC)
+    │   ├── router.js       # Client-side page routing
+    │   ├── supabase.js     # Database REST helpers
+    │   ├── demo-data.js    # Sample data for demo mode
+    │   └── *.js            # Feature modules (one per page/feature)
+    ├── css/
+    │   └── app.css         # All styles, design tokens, responsive breakpoints
+    └── netlify/
+        └── functions/      # Serverless chat proxy
 
 
 ## Getting Started
@@ -110,6 +70,7 @@ This dashboard is the control surface. It consolidates team management, sales pi
 git clone https://github.com/u-kaushik/Mission-Control-Portfolio.git
 cd Mission-Control-Portfolio
 npx serve .
+```
 
 The app ships with built-in demo data, so it works immediately without a database connection.
 
