@@ -46,9 +46,6 @@ This dashboard is the control surface. It consolidates team management, sales pi
 
 ## Project Structure
 
-
-## Project Structure
-
     ├── index.html          # Single-page shell with all markup
     ├── js/
     │   ├── boot.js         # App initialization and data seeding
@@ -79,10 +76,10 @@ To connect your own Supabase instance, add your credentials in js/config.js:
 const SUPABASE_URL = 'https://your-project.supabase.co';
 const SUPABASE_KEY = 'your-anon-key';
 
-Screenshots
+## Screenshots
 Screenshots coming soon. Visit the live demo to see it in action.
 
-Live Demo
+## Live Demo
 demomissioncontrol.netlify.app
 
 The demo runs on synthetic data — no real personal information or API keys are used.
