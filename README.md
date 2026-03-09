@@ -1,14 +1,14 @@
 # Mission Control — Agency Operations Dashboard
 
-A full-stack operations dashboard built to run a scaling agency. Mission Control consolidates team management, sales pipeline, client delivery, OKRs, and real-time analytics into a single command center — replacing the usual mess of spreadsheets, Notion pages, and disconnected tools.
+A full-stack operations dashboard built to run a scaling agency.
 
-**[Live Demo](https://demomissioncontrol.netlify.app/)**
-
----
+**[Live Demo](https://demomissioncontrol.netlify.app/)** · Built with Vanilla JS + Supabase + Chart.js
 
 ## The Problem
 
-Agencies juggling growth hit the same wall: ops data lives in six different tools, nobody has a single view of pipeline + delivery + team capacity, and the founder ends up being the only person who knows what's actually happening. Mission Control fixes that by putting everything in one place with real-time visibility.
+Agencies juggling growth hit the same wall: ops data lives in six different tools, nobody has a single view of pipeline + delivery + team capacity, and the founder ends up being the only person who knows what's actually happening.
+
+This dashboard is the control surface. It consolidates team management, sales pipeline, client delivery, OKRs, and real-time analytics into a single command center — replacing the usual mess of spreadsheets, Notion pages, and disconnected tools.
 
 ## Who It's For
 
@@ -86,118 +86,45 @@ Agencies juggling growth hit the same wall: ops data lives in six different tool
  Netlify + GitHub Actions CI/CD 
 |
 
-## Screenshots
+## Project Structure
 
-<!-- Add screenshots of key views here -->
 
-|
- Dashboard 
-|
- Pipeline 
-|
- Kanban 
-|
-|
----
-|
----
-|
----
-|
-|
-!
-[
-Dashboard
-](
-screenshots/dashboard.png
-)
-|
-!
-[
-Pipeline
-](
-screenshots/pipeline.png
-)
-|
-!
-[
-Kanban
-](
-screenshots/kanban.png
-)
-|
+├── index.html # Single-page shell with all markup
+├── js/
+│ ├── boot.js # App initialization and data seeding
+│ ├── config.js # Agent definitions and configuration
+│ ├── state.js # Centralized state object (MC)
+│ ├── router.js # Client-side page routing
+│ ├── supabase.js # Database REST helpers
+│ ├── demo-data.js # Sample data for demo mode
+│ └── *.js # Feature modules (one per page/feature)
+├── css/
+│ └── app.css # All styles, design tokens, responsive breakpoints
+└── netlify/
+└── functions/ # Serverless chat proxy
 
-|
- Scorecard 
-|
- Agent Panel 
-|
- Calendar 
-|
-|
----
-|
----
-|
----
-|
-|
-!
-[
-Scorecard
-](
-screenshots/scorecard.png
-)
-|
-!
-[
-Agents
-](
-screenshots/agents.png
-)
-|
-!
-[
-Calendar
-](
-screenshots/calendar.png
-)
-|
 
 ## Getting Started
 
-1. **Clone the repo**
-   ```bash
-   git clone https://github.com/u-kaushik/Mission-Control-Portfolio.git
-   cd Mission-Control-Portfolio
-
-Configure Supabase — Add your credentials in js/config.js:
-
-const SUPABASE_URL = 'https://your-project.supabase.co';
-const SUPABASE_KEY = 'your-anon-key';
-const SUPABASE_SVC = 'your-service-role-key';
-
-Run locally — No build step required. Serve with any static server:
-
+```bash
+git clone https://github.com/u-kaushik/Mission-Control-Portfolio.git
+cd Mission-Control-Portfolio
 npx serve .
 
 The app ships with built-in demo data, so it works immediately without a database connection.
 
-(Optional) Chat widget — Set GROQ_API_KEY as a Netlify environment variable to enable the AI chat assistant.
+To connect your own Supabase instance, add your credentials in js/config.js:
 
-Architecture
-index.html          → Single-page shell with all markup
-js/boot.js          → App initialization and data seeding
-js/config.js        → Agent definitions and configuration
-js/state.js         → Centralized state object (MC)
-js/router.js        → Client-side page routing
-js/supabase.js      → Database REST helpers
-js/demo-data.js     → Sample data for demo mode
-js/*.js             → Feature modules (one per page/feature)
-css/app.css         → All styles, design tokens, responsive breakpoints
-netlify/functions/  → Serverless chat proxy
+const SUPABASE_URL = 'https://your-project.supabase.co';
+const SUPABASE_KEY = 'your-anon-key';
+
+Screenshots
+Screenshots coming soon. Visit the live demo to see it in action.
+
+Live Demo
+demomissioncontrol.netlify.app
+
+The demo runs on synthetic data — no real personal information or API keys are used.
 
 License
-MIT
-
-Built by Kaush Group
+AGPL-3.0 — see LICENSE for details.
