@@ -18,6 +18,26 @@
 </head>
 <body>
 
+  <!-- ====== DEMO BANNER ====== -->
+  <div id="demo-banner" style="
+    position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+    background: linear-gradient(135deg, #7468B5 0%, #5ea8b8 100%);
+    color: #fff; text-align: center; padding: 10px 16px;
+    font-family: Inter, sans-serif; font-size: 13px; font-weight: 600;
+    letter-spacing: 0.03em;
+    box-shadow: 0 2px 12px rgba(116, 104, 181, 0.35);
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+  ">
+    <span style="font-size: 15px">◇</span>
+    <span>DEMO MODE — Showcase with sample data</span>
+    <button onclick="document.getElementById('demo-banner').style.display='none'; document.body.style.paddingTop='0'" style="
+      background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3);
+      color: #fff; border-radius: 6px; padding: 3px 10px; font-size: 11px;
+      font-weight: 700; cursor: pointer; letter-spacing: 0.04em;
+    ">DISMISS</button>
+  </div>
+  <style>body { padding-top: 40px !important; }</style>
+
   <!-- ====== PROJECT TREE POPOUT (overlay, available from any page) ====== -->
   <div class="project-popout-overlay" id="project-popout-overlay" onclick="closeProjectPopout()">
     <div class="project-popout" id="project-popout" onclick="event.stopPropagation()">
@@ -338,7 +358,6 @@
             <div class="queue-mobile-bar">
               <span style="font-size:12px;font-weight:600;color:var(--text-secondary)">To-Do Queue</span>
               <span class="count-badge" id="queue-count-mobile" style="font-size:11px">0</span>
-              <button onclick="openNewTodoModal()" class="btn-header queue-mobile-add-btn">+ To-Do</button>
             </div>
             <div class="kanban-board" id="kanban-board"></div>
             <!-- Selection floating bar -->
@@ -2374,6 +2393,7 @@ window.addEventListener('unhandledrejection', function(e) {
   <script src="js/config.js"></script>
   <script src="js/state.js"></script>
   <script src="js/supabase.js"></script>
+  <script src="js/demo-data.js"></script>
   <script src="js/modal-utils.js"></script>
   <script src="js/settings.js"></script>
   <script src="js/clock-weather.js"></script>
