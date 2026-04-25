@@ -4431,11 +4431,11 @@ select option:checked {
   .feed-panel.mobile-active {
     display: flex !important;
     position: fixed !important;
-    top: auto !important;
-    left: auto !important;
-    right: 12px !important;
-    bottom: calc(70px + env(safe-area-inset-bottom, 0px)) !important;
-    transform: none !important;
+    top: 50% !important;
+    left: 50% !important;
+    right: auto !important;
+    bottom: auto !important;
+    transform: translate(-50%, -50%) !important;
     width: min(420px, calc(100vw - 24px)) !important;
     max-width: 420px !important;
     height: min(78dvh, 760px) !important;
