@@ -129,8 +129,8 @@ function renderKanban(tasks){
   }).join('');
 
   // Re-apply selection state if select mode is active (safety net)
-  if (_todoSelectMode && _selectedTodos.size > 0) {
-    _selectedTodos.forEach(id => {
+  if (MC.todoSelectMode && MC.selectedTodos.size > 0) {
+    MC.selectedTodos.forEach(id => {
       const card = board.querySelector(`.task-card[data-task-id="${id}"]`);
       if (card) card.classList.add('selected');
     });

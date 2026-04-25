@@ -4065,6 +4065,10 @@ select option:checked {
     display: flex;
   }
 
+  #page-tasks.active .queue-panel {
+    display: flex !important;
+  }
+
   /* ── Kanban: horizontal scroll ── */
   .kanban-board {
     overflow-x: auto;
