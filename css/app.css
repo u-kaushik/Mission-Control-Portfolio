@@ -1626,6 +1626,30 @@ body.gc-event-dragging * { cursor: grabbing !important; }
   background: rgba(10, 14, 28, 0.28);
 }
 
+.panel-popout-close {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  margin-left: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.12s;
+  flex-shrink: 0;
+}
+
+.panel-popout-close:hover {
+  background: var(--surface-2);
+  color: var(--text-primary);
+  border-color: var(--text-muted);
+}
+
 /* ══════════════════════════════════════════
    AGENTS PANEL
 ══════════════════════════════════════════ */
@@ -3956,6 +3980,10 @@ select option:checked {
     box-shadow: var(--shadow-lg);
     overflow: hidden;
   }
+
+  #page-tasks .feed-panel.mobile-active .panel-header {
+    display: flex !important;
+  }
 }
 
 @media (max-width: 1280px) {
@@ -4394,6 +4422,44 @@ select option:checked {
 
   /* ── Hide desktop panel header (we use mobile nav) ── */
   .panel-header { display: none; }
+
+  .panel-popout-close {
+    display: inline-flex;
+  }
+
+  .agents-panel.mobile-active,
+  .feed-panel.mobile-active {
+    display: flex !important;
+    position: fixed !important;
+    top: auto !important;
+    left: auto !important;
+    right: 12px !important;
+    bottom: calc(70px + env(safe-area-inset-bottom, 0px)) !important;
+    transform: none !important;
+    width: min(420px, calc(100vw - 24px)) !important;
+    max-width: 420px !important;
+    height: min(78dvh, 760px) !important;
+    z-index: 350 !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 18px 18px 14px 14px !important;
+    background: var(--surface) !important;
+    box-shadow: var(--shadow-lg) !important;
+    overflow: hidden !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    flex-direction: column;
+  }
+
+  .agents-panel.mobile-active .panel-header,
+  .feed-panel.mobile-active .panel-header {
+    display: flex !important;
+  }
+
+  .agents-panel.mobile-active .panel-body,
+  .feed-panel.mobile-active .panel-body {
+    min-height: 0;
+  }
 
   /* ── Tasks page: kanban panel mobile sub-header ── */
   .queue-mobile-bar {

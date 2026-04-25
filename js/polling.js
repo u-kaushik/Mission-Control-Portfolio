@@ -65,12 +65,55 @@ function isCompactPanelMode() {
   return window.innerWidth <= FEED_POPOUT_BREAKPOINT;
 }
 
+function applyCompactPanelStyles(el, open) {
+  if (!el) return;
+  if (!open) {
+    [
+      'display',
+      'position',
+      'top',
+      'left',
+      'right',
+      'bottom',
+      'transform',
+      'width',
+      'max-width',
+      'height',
+      'z-index',
+      'border',
+      'border-radius',
+      'background',
+      'box-shadow',
+      'overflow'
+    ].forEach(prop => el.style.removeProperty(prop));
+    return;
+  }
+
+  el.style.display = 'flex';
+  el.style.position = 'fixed';
+  el.style.top = '50%';
+  el.style.left = '50%';
+  el.style.right = 'auto';
+  el.style.bottom = 'auto';
+  el.style.transform = 'translate(-50%, -50%)';
+  el.style.width = '380px';
+  el.style.maxWidth = 'calc(100vw - 24px)';
+  el.style.height = 'min(78dvh, 760px)';
+  el.style.zIndex = '350';
+  el.style.border = '1px solid var(--border)';
+  el.style.borderRadius = '18px 18px 14px 14px';
+  el.style.background = 'var(--surface)';
+  el.style.boxShadow = 'var(--shadow-lg)';
+  el.style.overflow = 'hidden';
+}
+
 function closeCompactPanel() {
   currentMobilePanel = 'kanban';
   const activePage = document.querySelector('.page.active') || document;
   activePage.querySelectorAll('.agents-panel,.queue-panel,.feed-panel').forEach(el => {
     el.classList.remove('mobile-active');
   });
+  activePage.querySelectorAll('.agents-panel,.feed-panel').forEach(el => applyCompactPanelStyles(el, false));
   const backdrop = document.getElementById('panel-popout-backdrop');
   if (backdrop) backdrop.classList.remove('active');
   document.querySelectorAll('.mobile-panel-btn, .queue-mobile-panel-btn').forEach(b => {
@@ -116,9 +159,11 @@ function switchMobilePanel(panel) {
     });
     if (target && panel !== 'kanban' && !wasOpen) {
       target.classList.add('mobile-active');
+      applyCompactPanelStyles(target, true);
       const backdrop = document.getElementById('panel-popout-backdrop');
       if (backdrop) backdrop.classList.add('active');
     } else {
+      applyCompactPanelStyles(target, false);
       const backdrop = document.getElementById('panel-popout-backdrop');
       if (backdrop) backdrop.classList.remove('active');
     }
@@ -127,7 +172,7 @@ function switchMobilePanel(panel) {
   }
 
   // Update nav buttons
-  document.querySelectorAll('.mobile-nav-btn').forEach(b => {
+  document.querySelectorAll('.mobile-panel-btn, .queue-mobile-panel-btn').forEach(b => {
     b.classList.toggle('active', b.dataset.panel === panel);
   });
 }
