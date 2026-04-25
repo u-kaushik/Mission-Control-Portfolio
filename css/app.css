@@ -1966,8 +1966,12 @@ body.todo-select-mode .todo-select-bar { display: flex; }
 }
 .task-footer-row {
   display: flex; align-items: center;
-  gap: 4px;
-  flex-wrap: wrap;
+  gap: 6px;
+  flex-wrap: nowrap;
+  min-width: 0;
+}
+.task-footer-main {
+  justify-content: space-between;
 }
 .task-agent {
   display: flex; align-items: center; gap: 5px;
@@ -1976,6 +1980,57 @@ body.todo-select-mode .todo-select-bar { display: flex; }
   font-weight: 500;
   min-width: 0;
   overflow: hidden;
+}
+.task-agent-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.task-card-meta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  min-width: 0;
+  flex-shrink: 0;
+  overflow: visible;
+}
+.task-card-meta .todo-source-badge {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.task-card-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--text-muted);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.task-card-pill[data-rock-preview] {
+  cursor: pointer;
+  border: 1px solid var(--border);
+  transition: background 0.12s, color 0.12s, border-color 0.12s, box-shadow 0.12s;
+}
+.task-card-pill[data-rock-preview]:hover {
+  background: var(--surface);
+  color: var(--text-primary);
+  border-color: var(--text-muted);
+  box-shadow: var(--shadow-xs);
+}
+.task-card-due {
+  white-space: nowrap;
+}
+.task-card-meta .task-due {
+  margin-left: 0;
+  flex-shrink: 0;
 }
 /* Round agent avatar on cards */
 .task-agent-avatar {

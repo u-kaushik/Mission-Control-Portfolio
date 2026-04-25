@@ -169,6 +169,8 @@ function renderTaskCard(task, accentClass) {
   // ── Rock link (no breadcrumb, just R# pill in footer) ──
   const rockData = (MC.rocksMap && task.rock_id && MC.rocksMap[task.rock_id]) || null;
   const _rockNum = rockData && MC.allRocks ? (MC.allRocks.indexOf(rockData) + 1) || 0 : 0;
+  const displayRockId = task.rock_id || '';
+  const rockLabel = _rockNum ? `<i class="ph-thin ph-book-bookmark"></i> Q2 R${_rockNum}` : '';
 
   // ── Due date chip ──
   const isDone = effectiveStatus(task) === 'done';
@@ -220,18 +222,16 @@ function renderTaskCard(task, accentClass) {
         <span class="task-title">${escHtml(capitalizeName(title))}</span>
       </div>
       <div class="task-footer">
-        <div class="task-footer-row">
-          <div class="task-agent" style="flex:1;min-width:0;overflow:hidden">
+        <div class="task-footer-row task-footer-main">
+          <div class="task-agent">
             <div class="task-agent-avatar" data-agent-id="${assignedIds[0]||agentName}" style="background:var(--surface-2);color:var(--text-muted);cursor:pointer">${avatarInner(agentName)}</div>
-            <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(agentName.charAt(0).toUpperCase()+agentName.slice(1))}</span>
+            <span class="task-agent-name">${escHtml(agentName.charAt(0).toUpperCase()+agentName.slice(1))}</span>
             ${agentDotHtml}
           </div>
-          ${priorityHtml}
-        </div>
-        <div class="task-footer-row">
-          ${sourceBadge}
-          ${_rockNum ? `<span style="font-size:9px;font-weight:800;padding:1px 5px;border-radius:4px;background:var(--surface-2);color:var(--text-muted);flex-shrink:0;letter-spacing:0.04em;cursor:pointer" onclick="event.stopPropagation();openRockPreviewPopup(event,'${escHtml(task.rock_id)}')">R${_rockNum}</span>` : (!task.rock_id ? '<span style="font-size:9px;font-weight:800;padding:1px 5px;border-radius:4px;background:var(--surface-2);color:var(--text-muted);flex-shrink:0;letter-spacing:0.04em">Ad hoc</span>' : '')}
-          <span class="${dueClass}" style="flex-shrink:0;margin-left:auto">${dueLabel}</span>
+          <div class="task-card-meta">
+            ${rockLabel ? `<span class="task-card-pill" data-rock-preview="${escHtml(displayRockId)}" onclick="event.stopPropagation();openRockPreviewPopup(event,'${escHtml(task.rock_id)}')">${rockLabel}</span>` : '<span class="task-card-pill">Ad hoc</span>'}
+            <span class="${dueClass} task-card-due">${dueLabel}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -270,4 +270,3 @@ function renderKanbanEmpty() {
     </div>
   `).join('');
 }
-
