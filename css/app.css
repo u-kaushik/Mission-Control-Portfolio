@@ -3958,6 +3958,50 @@ select option:checked {
   }
 }
 
+@media (max-width: 1280px) {
+  #page-tasks .workspace {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: 1fr;
+  }
+
+  #page-tasks .agents-panel,
+  #page-tasks .feed-panel {
+    display: none;
+  }
+
+  #page-tasks .queue-panel {
+    display: flex !important;
+  }
+
+  #page-tasks .kanban-board {
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 10px 12px 10px 18px;
+    gap: 10px;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+  }
+
+  #page-tasks .kanban-col {
+    min-width: 260px;
+    flex: 0 0 260px;
+    scroll-snap-align: start;
+  }
+
+  #page-tasks .queue-mobile-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    flex-shrink: 0;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
 /* ══════════════════════════════════════════
    MOBILE RESPONSIVE — phones (≤ 768px)
 ══════════════════════════════════════════ */
@@ -4025,10 +4069,11 @@ select option:checked {
   .kanban-board {
     overflow-x: auto;
     overflow-y: hidden;
-    padding: 10px 12px;
+    padding: 10px 14px;
     gap: 10px;
     -webkit-overflow-scrolling: touch;
     scroll-snap-type: x mandatory;
+    scroll-padding-inline: 14px;
   }
   .kanban-col {
     min-width: 260px;
@@ -4348,11 +4393,14 @@ select option:checked {
 
   /* ── Tasks page: kanban panel mobile sub-header ── */
   .queue-mobile-bar {
-    display: flex; align-items: center; gap: 8px;
+    display: flex; align-items: center; gap: 10px;
     padding: 8px 12px;
     border-bottom: 1px solid var(--border);
     background: var(--surface);
     flex-shrink: 0;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
   .queue-mobile-add-btn {
     margin-left: auto;
@@ -4494,6 +4542,7 @@ select option:checked {
 @media (max-width: 380px) {
   .header-logo { font-size: 12px; }
   .mobile-nav-icon { font-size: 18px; }
+  .mobile-nav-label { font-size: 7px; letter-spacing: 0.02em; }
   .kanban-col { min-width: 240px; flex: 0 0 240px; }
   .notes-masonry { columns: 1; }
   .page-body { padding: 10px 12px; }
