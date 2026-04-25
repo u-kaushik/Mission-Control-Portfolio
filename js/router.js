@@ -36,6 +36,7 @@ function openTaskFromDashboard(taskId) {
 
 function navigateTo(page) {
   MC.currentPage = page;
+  if (typeof closeCompactPanel === 'function') closeCompactPanel();
   // Update desktop nav items
   document.querySelectorAll('.nav-item[data-page]').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.page === page);
@@ -63,8 +64,8 @@ function navigateTo(page) {
     if (!MC.allRocks.length) loadRocks().catch(e => console.warn('[Router] loadRocks failed:', e));
   }
   else if (page === 'tasks') {
-    /* On mobile, default to showing the kanban/queue panel */
-    if (window.innerWidth <= 768) switchMobilePanel('kanban');
+    /* On compact layouts, default to showing the kanban/queue panel */
+    if (window.innerWidth <= 1280) switchMobilePanel('kanban');
     if (MC.pendingTaskId) {
       const pendTId = MC.pendingTaskId;
       MC.pendingTaskId = null;
@@ -133,4 +134,3 @@ document.querySelectorAll('.settings-nav-item[data-panel]').forEach(btn => {
     if (panel) panel.classList.add('active');
   });
 });
-

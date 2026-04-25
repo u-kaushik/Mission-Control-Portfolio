@@ -1611,6 +1611,21 @@ body.gc-event-dragging * { cursor: grabbing !important; }
 
 .panel-body { flex: 1; overflow-y: auto; overflow-x: hidden; min-height: 0; }
 
+.panel-popout-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 340;
+  background: rgba(10, 14, 28, 0.18);
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+}
+
+.panel-popout-backdrop.active {
+  display: block;
+  background: rgba(10, 14, 28, 0.28);
+}
+
 /* ══════════════════════════════════════════
    AGENTS PANEL
 ══════════════════════════════════════════ */
@@ -3794,10 +3809,11 @@ select option:checked {
   .vto-row-3, .vto-row-4 { grid-template-columns:repeat(2, 1fr); }
 }
 
-/* To-Dos: keep kanban cards readable on tablet / narrow laptop widths */
-@media (min-width: 769px) and (max-width: 1180px) {
+/* To-Dos: mirror main Mission Control's queue-first compact layout */
+@media (min-width: 769px) and (max-width: 1450px) {
   #page-tasks .workspace {
     grid-template-columns: minmax(0, 1fr) !important;
+    overflow: visible;
   }
 
   #page-tasks .agents-panel,
@@ -3809,23 +3825,81 @@ select option:checked {
     display: flex;
   }
 
+  #page-tasks .queue-panel .panel-header {
+    min-width: 0;
+  }
+
+  #page-tasks .queue-mobile-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    flex-shrink: 0;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #page-tasks .queue-mobile-panel-btn {
+    all: unset;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    padding: 5px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    box-shadow: none;
+    -webkit-appearance: none;
+    appearance: none;
+    line-height: 1;
+    -webkit-tap-highlight-color: transparent;
+    cursor: pointer;
+  }
+
   #page-tasks .kanban-board {
     overflow-x: auto;
     overflow-y: hidden;
-    padding: 10px 12px;
+    padding: 10px 12px 10px 16px;
     gap: 10px;
     -webkit-overflow-scrolling: touch;
-    scroll-snap-type: x proximity;
+    scroll-snap-type: x mandatory;
+    margin-left: 12px;
+    margin-right: 12px;
   }
 
   #page-tasks .kanban-col {
-    min-width: 170px;
-    flex: 0 0 170px;
+    min-width: 220px;
+    flex: 0 0 220px;
     scroll-snap-align: start;
   }
 
   #page-tasks .task-card {
     min-width: 0;
+  }
+
+  #page-tasks .feed-panel.mobile-active {
+    display: flex !important;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 380px;
+    max-width: calc(100vw - 24px);
+    height: min(78dvh, 760px);
+    z-index: 350;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: var(--surface);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
   }
 }
 

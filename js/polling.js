@@ -58,6 +58,25 @@ function restartPolling() {
 // MOBILE PANEL SWITCHING
 // =============================================
 let currentMobilePanel = 'agents';
+const COMPACT_PANEL_BREAKPOINT = 1280;
+const FEED_POPOUT_BREAKPOINT = 1450;
+
+function isCompactPanelMode() {
+  return window.innerWidth <= FEED_POPOUT_BREAKPOINT;
+}
+
+function closeCompactPanel() {
+  currentMobilePanel = 'kanban';
+  const activePage = document.querySelector('.page.active') || document;
+  activePage.querySelectorAll('.agents-panel,.queue-panel,.feed-panel').forEach(el => {
+    el.classList.remove('mobile-active');
+  });
+  const backdrop = document.getElementById('panel-popout-backdrop');
+  if (backdrop) backdrop.classList.remove('active');
+  document.querySelectorAll('.mobile-panel-btn, .queue-mobile-panel-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.panel === 'kanban');
+  });
+}
 
 function switchMobilePanel(panel) {
   currentMobilePanel = panel;
@@ -87,13 +106,24 @@ function switchMobilePanel(panel) {
     feed:   '.feed-panel',
   };
 
-  // Only apply on mobile (768px or narrower)
-  if (window.innerWidth <= 768) {
-    document.querySelectorAll('.agents-panel,.queue-panel,.feed-panel').forEach(el => {
+  // Apply compact panel behavior on tablets/narrow laptops too.
+  if (isCompactPanelMode()) {
+    const activePage = document.querySelector('.page.active') || document;
+    const target = activePage.querySelector(panelMap[panel]);
+    const wasOpen = target ? target.classList.contains('mobile-active') : false;
+    activePage.querySelectorAll('.agents-panel,.queue-panel,.feed-panel').forEach(el => {
       el.classList.remove('mobile-active');
     });
-    const target = document.querySelector(panelMap[panel]);
-    if (target) target.classList.add('mobile-active');
+    if (target && panel !== 'kanban' && !wasOpen) {
+      target.classList.add('mobile-active');
+      const backdrop = document.getElementById('panel-popout-backdrop');
+      if (backdrop) backdrop.classList.add('active');
+    } else {
+      const backdrop = document.getElementById('panel-popout-backdrop');
+      if (backdrop) backdrop.classList.remove('active');
+    }
+  } else {
+    closeCompactPanel();
   }
 
   // Update nav buttons
@@ -104,18 +134,22 @@ function switchMobilePanel(panel) {
 
 // Initialise mobile panel on load and on resize
 function initMobilePanels() {
-  if (window.innerWidth <= 768) {
+  if (window.innerWidth <= COMPACT_PANEL_BREAKPOINT) {
     // Ensure current page's mobile nav btn is highlighted
     document.querySelectorAll('.mobile-nav-btn[data-page]').forEach(b => {
       b.classList.toggle('active', b.dataset.page === MC.currentPage);
     });
-  } else {
-    // Desktop: show all panels, remove mobile-active class
-    document.querySelectorAll('.agents-panel,.queue-panel,.feed-panel').forEach(el => {
-      el.classList.remove('mobile-active');
-    });
+  }
+
+  if (window.innerWidth > FEED_POPOUT_BREAKPOINT) {
+    closeCompactPanel();
   }
 }
 
-window.addEventListener('resize', initMobilePanels);
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && document.getElementById('panel-popout-backdrop')?.classList.contains('active')) {
+    closeCompactPanel();
+  }
+});
 
+window.addEventListener('resize', initMobilePanels);

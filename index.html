@@ -356,8 +356,8 @@
             </div>
             <!-- Mobile sub-header: count + add button — shown only on mobile -->
             <div class="queue-mobile-bar">
-              <span style="font-size:12px;font-weight:600;color:var(--text-secondary)">To-Do Queue</span>
-              <span class="count-badge" id="queue-count-mobile" style="font-size:11px">0</span>
+              <button type="button" onclick="switchMobilePanel('feed')" class="btn-header-toggle queue-mobile-panel-btn mobile-panel-btn" data-panel="feed">Live Feed</button>
+              <span class="queue-mobile-countdown" style="font-size:10px;font-weight:600;color:var(--text-muted);white-space:nowrap"></span>
             </div>
             <div class="kanban-board" id="kanban-board"></div>
             <!-- Selection floating bar -->
@@ -410,6 +410,8 @@
           </div>
         </div>
       </div>
+
+      <div id="panel-popout-backdrop" class="panel-popout-backdrop" onclick="closeCompactPanel()"></div>
 
       <!-- ══ PAGE: ISSUES (EOS Issues List — IDS workflow) ══ -->
       <div class="page" id="page-issues">
