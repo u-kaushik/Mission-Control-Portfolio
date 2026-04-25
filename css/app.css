@@ -3794,6 +3794,41 @@ select option:checked {
   .vto-row-3, .vto-row-4 { grid-template-columns:repeat(2, 1fr); }
 }
 
+/* To-Dos: keep kanban cards readable on tablet / narrow laptop widths */
+@media (min-width: 769px) and (max-width: 1180px) {
+  #page-tasks .workspace {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  #page-tasks .agents-panel,
+  #page-tasks .feed-panel {
+    display: none;
+  }
+
+  #page-tasks .queue-panel {
+    display: flex;
+  }
+
+  #page-tasks .kanban-board {
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 10px 12px;
+    gap: 10px;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+  }
+
+  #page-tasks .kanban-col {
+    min-width: 170px;
+    flex: 0 0 170px;
+    scroll-snap-align: start;
+  }
+
+  #page-tasks .task-card {
+    min-width: 0;
+  }
+}
+
 /* ══════════════════════════════════════════
    MOBILE RESPONSIVE — phones (≤ 768px)
 ══════════════════════════════════════════ */
