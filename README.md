@@ -10,6 +10,10 @@ Agencies juggling growth hit the same wall: ops data lives in six different tool
 
 This dashboard is the control surface. It consolidates team management, sales pipeline, client delivery, OKRs, and real-time analytics into a single command center — replacing the usual mess of spreadsheets, Notion pages, and disconnected tools.
 
+<div align="center">
+  <img src="./public/mission-control-homepage.png" alt="Mission Control homepage screenshot" width="1200" />
+</div>
+
 ## Who It's For
 
 - Agency founders scaling past their first few hires
